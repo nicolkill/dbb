@@ -11,6 +11,14 @@ config :dbb,
   ecto_repos: [Dbb.Repo],
   generators: [binary_id: true]
 
+allowed_sites =
+  System.get_env("ALLOWED_SITES") ||
+    "*"
+    |> String.split(",")
+
+config :cors_plug,
+  origin: allowed_sites
+
 # Configures the endpoint
 config :dbb, DbbWeb.Endpoint,
   url: [host: "localhost"],

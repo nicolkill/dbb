@@ -21,18 +21,14 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
-  database_url =
-    System.get_env("DATABASE_URL") ||
-      raise """
-      environment variable DATABASE_URL is missing.
-      For example: ecto://USER:PASS@HOST/DATABASE
-      """
-
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :dbb, Dbb.Repo,
-    # ssl: true,
-    url: database_url,
+    ssl: (System.get_env("POSTGRES_SSL") == 'true'),
+    username: System.get_env("POSTGRES_USERNAME"),
+    password: System.get_env("POSTGRES_PASSWORD"),
+    hostname: System.get_env("POSTGRES_HOSTNAME"),
+    database: System.get_env("POSTGRES_DATABASE"),
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
 
@@ -58,7 +54,6 @@ if config_env() == :prod do
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
       # See the documentation on https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
-      ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
     secret_key_base: secret_key_base
