@@ -10,6 +10,7 @@ services:
       - 4000:4000
     environment:
       ALLOWED_SITES: "*"
+      CONFIG_SCHEMA: config.json
 
       # db config
       POSTGRES_USERNAME: postgres

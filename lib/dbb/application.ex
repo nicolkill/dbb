@@ -7,6 +7,9 @@ defmodule Dbb.Application do
 
   @impl true
   def start(_type, _args) do
+    # manual init area
+    Dbb.Cache.init()
+
     children = [
       # Start the Telemetry supervisor
       DbbWeb.Telemetry,
