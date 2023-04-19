@@ -86,7 +86,9 @@ defmodule Dbb.Content do
 
   """
   def delete_table(%Table{} = table) do
-    Repo.delete(table)
+    table
+    |> Table.changeset_delete(%{deleted_at: NaiveDateTime.utc_now()})
+    |> Repo.update()
   end
 
   @doc """
