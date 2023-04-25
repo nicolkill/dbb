@@ -1,3 +1,19 @@
 {
-  "key": "value"
+  "schemas": [
+    {
+      "name": "users",
+      "fields": {
+        "name": "string",
+        "age": "number",
+        "male": "boolean"
+      }
+    },
+    {
+      "name": "products",
+      "fields": {
+        "name": "string",
+        "expiration": "datetime"
+      }
+    }
+  ]
 }

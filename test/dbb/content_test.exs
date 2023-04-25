@@ -10,56 +10,60 @@ defmodule Dbb.ContentTest do
 
     @invalid_attrs %{data: nil, deleted_at: nil, reference: nil, schema: nil}
 
-    test "list_table/0 returns all table" do
-      table = table_fixture()
-      assert Content.list_table() == [table]
+    test "list_table/1 returns all users" do
+      users = users_fixture()
+      assert Content.list_table("users") == [users]
     end
 
-    test "get_table!/1 returns the table with given id" do
-      table = table_fixture()
-      assert Content.get_table!(table.id) == table
+    test "get_table!/2 returns the table with given id" do
+      users = users_fixture()
+      assert Content.get_table!("users", users.id) == users
     end
 
-    test "create_table/1 with valid data creates a table" do
-      valid_attrs = %{data: %{}, deleted_at: ~N[2023-04-17 23:57:00], reference: "7488a646-e31f-11e4-aace-600308960662", schema: "some schema"}
+    test "create_table/2 with valid data creates a user" do
+      valid_attrs = %{
+        data: %{},
+        reference: "7488a646-e31f-11e4-aace-600308960662",
+        schema: "users"
+      }
 
-      assert {:ok, %Table{} = table} = Content.create_table(valid_attrs)
-      assert table.data == %{}
-      assert table.deleted_at == ~N[2023-04-17 23:57:00]
-      assert table.reference == "7488a646-e31f-11e4-aace-600308960662"
-      assert table.schema == "some schema"
+      assert {:ok, %Table{} = user} = Content.create_table("users", valid_attrs)
+      assert user.data == %{}
+      assert user.reference == "7488a646-e31f-11e4-aace-600308960662"
+      assert user.schema == "users"
     end
 
     test "create_table/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Content.create_table(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Content.create_table("users", @invalid_attrs)
     end
 
-    test "update_table/2 with valid data updates the table" do
-      table = table_fixture()
-      update_attrs = %{data: %{}, deleted_at: ~N[2023-04-18 23:57:00], reference: "7488a646-e31f-11e4-aace-600308960668", schema: "some updated schema"}
+    test "update_table/2 with valid data updates the users" do
+      user = users_fixture()
+      update_attrs = %{
+        data: %{},
+        reference: "7488a646-e31f-11e4-aace-600308960668"
+      }
 
-      assert {:ok, %Table{} = table} = Content.update_table(table, update_attrs)
-      assert table.data == %{}
-      assert table.deleted_at == ~N[2023-04-18 23:57:00]
-      assert table.reference == "7488a646-e31f-11e4-aace-600308960668"
-      assert table.schema == "some updated schema"
+      assert {:ok, %Table{} = user} = Content.update_table(user, update_attrs)
+      assert user.data == %{}
+      assert user.reference == "7488a646-e31f-11e4-aace-600308960668"
     end
 
     test "update_table/2 with invalid data returns error changeset" do
-      table = table_fixture()
-      assert {:error, %Ecto.Changeset{}} = Content.update_table(table, @invalid_attrs)
-      assert table == Content.get_table!(table.id)
+      user = users_fixture()
+      assert {:error, %Ecto.Changeset{}} = Content.update_table(user, @invalid_attrs)
+      assert user == Content.get_table!("users", user.id)
     end
 
-    test "delete_table/1 deletes the table" do
-      table = table_fixture()
-      assert {:ok, %Table{}} = Content.delete_table(table)
-      assert_raise Ecto.NoResultsError, fn -> Content.get_table!(table.id) end
+    test "delete_table/1 deletes the users" do
+      user = users_fixture()
+      assert {:ok, %Table{}} = Content.delete_table(user)
+      assert_raise Ecto.NoResultsError, fn -> Content.get_table!("users", user.id) end
     end
 
-    test "change_table/1 returns a table changeset" do
-      table = table_fixture()
-      assert %Ecto.Changeset{} = Content.change_table(table)
+    test "change_table/1 returns a users changeset" do
+      user = users_fixture()
+      assert %Ecto.Changeset{} = Content.change_table(user)
     end
   end
 end

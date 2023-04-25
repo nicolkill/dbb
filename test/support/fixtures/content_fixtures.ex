@@ -7,16 +7,15 @@ defmodule Dbb.ContentFixtures do
   @doc """
   Generate a table.
   """
-  def table_fixture(attrs \\ %{}) do
-    {:ok, table} =
-      attrs
-      |> Enum.into(%{
-        data: %{},
-        deleted_at: ~N[2023-04-17 23:57:00],
-        reference: "7488a646-e31f-11e4-aace-600308960662",
-        schema: "some schema"
-      })
-      |> Dbb.Content.create_table()
+  def users_fixture(attrs \\ %{}) do
+    attrs = Enum.into(attrs, %{
+      data: %{
+        "name" => "some_name"
+      },
+      reference: "7488a646-e31f-11e4-aace-600308960662"
+    })
+
+    {:ok, table} = Dbb.Content.create_table("users", attrs)
 
     table
   end

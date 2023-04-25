@@ -5,7 +5,7 @@ defmodule DbbWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", DbbWeb do
+  scope "/api/v1", DbbWeb do
     pipe_through :api
 
     get "/:schema", TableController, :index

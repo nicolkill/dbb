@@ -5,13 +5,13 @@ defmodule Dbb.Content.Table do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
-  @required_fields [:schema, :reference, :data]
-  @fields @required_fields
+  @required_fields [:schema, :data]
+  @fields @required_fields ++ [:reference]
   @soft_delete_fields [:deleted_at]
 
   schema "table" do
     field :data, :map
-    field :reference, Ecto.UUID
+    field :reference, Ecto.UUID, default: nil
     field :schema, :string
 
     # soft delete field

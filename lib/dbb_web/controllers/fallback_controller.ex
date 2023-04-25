@@ -6,6 +6,12 @@ defmodule DbbWeb.FallbackController do
   """
   use DbbWeb, :controller
 
+  def call(conn, {schema, _, {:error, nil}}) when is_bitstring(schema) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> json(%{message: "not valid body"})
+  end
+
   # This clause handles errors returned by Ecto's insert/update/delete.
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn

@@ -13,12 +13,16 @@ defmodule Dbb.Content do
 
   ## Examples
 
-      iex> list_table()
+      iex> list_table("some_schema")
       [%Table{}, ...]
 
   """
-  def list_table do
-    Repo.all(Table)
+  @spec list_table(String.t()) :: [Table]
+  def list_table(nil), do: []
+  def list_table(schema) do
+    Table
+    |> where(schema: ^schema)
+    |> Repo.all()
   end
 
   @doc """
@@ -28,14 +32,21 @@ defmodule Dbb.Content do
 
   ## Examples
 
-      iex> get_table!(123)
+      iex> get_table!("some_schema", 123)
       %Table{}
 
       iex> get_table!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_table!(id), do: Repo.get!(Table, id)
+  @spec get_table!(String.t(), String.t()) :: Table
+  def get_table!(nil, _), do: {:error, :not_found}
+  def get_table!(schema, id) do
+    Table
+    |> where(schema: ^schema)
+    |> where([t], is_nil(t.deleted_at))
+    |> Repo.get!(id)
+  end
 
   @doc """
   Creates a table.
@@ -49,7 +60,16 @@ defmodule Dbb.Content do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_table(attrs \\ %{}) do
+  def create_table(nil, _), do: {:error, :not_found}
+  def create_table(schema, attrs \\ %{}) do
+    key =
+      attrs
+      |> Map.keys()
+      |> Enum.at(0)
+      |> is_atom()
+      |> if do: :schema, else: "schema"
+    attrs = Map.put(attrs, key, schema)
+
     %Table{}
     |> Table.changeset(attrs)
     |> Repo.insert()
