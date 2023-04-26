@@ -22,7 +22,7 @@ just for prototypes or small/medium projects
 - [x] Data validation by config
 - [x] Soft delete
 - [x] Relate any record to another by a reference field
-- [ ] Api key by config
+- [x] Api key by config
 - [ ] General search on schema fields
 - [ ] Schema events (create, update, delete) and call a webhook by config
 - [ ] Same events but call a socket
@@ -87,6 +87,7 @@ The schema config exists on his own file, but the server it's configured by env 
 # server config
 PORT: 4000
 ALLOWED_SITES: "*" # cors stuff
+ALLOWED_API_KEY: "976ba520-7ea4-45cb-9e17-e7c5d922cfb2"
 CONFIG_SCHEMA: config.json
 
 # db config

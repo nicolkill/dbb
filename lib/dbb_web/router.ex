@@ -3,6 +3,7 @@ defmodule DbbWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Dbb.Plugs.Auth
   end
 
   scope "/api/v1", DbbWeb do

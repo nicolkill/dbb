@@ -4,7 +4,7 @@ defmodule Dbb.Schema do
 
   @key :schema_config
 
-  defp file, do: Application.get_env(:dbb, :schema_config)[:file]
+  defp file, do: Application.get_env(:dbb, :general_config)[:file]
 
   def load_config() do
     config =
