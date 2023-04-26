@@ -51,6 +51,15 @@ just for prototypes or small/medium projects
 }
 ``` 
 
+Available data types
+
+- number
+- boolean
+- string
+- datetime
+
+more would be added in future updates
+
 ## How to run:
 
 ### Using docker image
