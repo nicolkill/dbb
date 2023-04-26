@@ -59,6 +59,14 @@ defmodule DbbWeb.TableControllerTest do
     end
   end
 
+  describe "calls to not existing schema" do
+    test "creates a record on not existing schema", %{conn: conn} do
+      conn = post(conn, ~p"/api/v1/unknown", users: @create_attrs)
+      assert %{"message" => "not valid body"} = json_response(conn, 422)
+
+    end
+  end
+
   describe "update user" do
     setup [:create_users]
 
