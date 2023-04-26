@@ -1,18 +1,88 @@
 # Dbb
 
-To start your Phoenix server:
+## General description
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+Dbb (doesn't mean nothing, it's just a sticky name) its a basic API-CRUD that provides a unique datasource oriented by 
+schemas, you don't need to create your own API and create controller by controller, you just need create an container 
+of this project or clone-setup this repo, configure your `config.json` file and the system it's setted up, if you need
+more fields or change some field data type to another, change your config file, restart and it's done
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+The point of Dbb it's, if you don't want spend much time in a project, you can use Dbb as a prototype/beta backend and
+if you see that your backed will need more work, you can spend the time creating the micro service or another backend 
+that will contain your personal processes
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+The limits of this concept of project must be tested to know how much in prod can be used, but the main idea of Dbb its
+just for prototypes or small/medium projects
 
-## Learn more
+## Features
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+- [x] Config database schema by file config
+- [x] CRUD by config
+- [x] Cors configured by env var
+- [x] Data validation by config
+- [x] Soft delete
+- [x] Relate any record to another by a reference field
+- [ ] Api key by config
+- [ ] General search on schema fields
+- [ ] Schema events (create, update, delete) and call a webhook by config
+- [ ] Same events but call a socket
+
+#### `config.json` file example:
+
+```
+{
+  "schemas": [
+    {
+      "name": "users",
+      "fields": {
+        "name": "string",
+        "age": "number",
+        "male": "boolean"
+      }
+    },
+    {
+      "name": "products",
+      "fields": {
+        "name": "string",
+        "expiration": "datetime"
+      }
+    }
+  ]
+}
+``` 
+
+## How to run:
+
+### Using docker image
+
+Work in progress...
+
+### Cloning the repo 
+
+#### Requirements
+
+- Docker with Compose
+- Maketool
+
+#### Steps
+
+1. Clone the repo
+2. Run `make` to download deps and build docker images (runs every time that you want to reload deps or download new ones)
+3. Run `make up` to run create the container and run in the `http://localhost:4000`
+
+## Configure
+
+The schema config exists on his own file, but the server it's configured by env vars, so here the list
+
+```
+# server config
+PORT: 4000
+ALLOWED_SITES: "*" # cors stuff
+CONFIG_SCHEMA: config.json
+
+# db config
+POSTGRES_USERNAME: postgres
+POSTGRES_PASSWORD: postgres
+POSTGRES_DATABASE: postgres
+POSTGRES_HOSTNAME: postgres
+```
