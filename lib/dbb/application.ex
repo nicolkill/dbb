@@ -9,6 +9,7 @@ defmodule Dbb.Application do
   def start(_type, _args) do
     # manual init area
     Dbb.Cache.init()
+    Dbb.Release.migrate()
 
     children = [
       # Start the Telemetry supervisor

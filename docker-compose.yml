@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   app:
-    image: nicolkill/dbb:latest
+    image: nicolkill/dbb_dev:latest
     volumes:
       - .:/app
     depends_on:
@@ -17,6 +17,25 @@ services:
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DATABASE: postgres
+      POSTGRES_HOSTNAME: postgres
+
+  prod:
+    image: nicolkill/dbb:latest
+    depends_on:
+      - postgres
+    ports:
+      - 4001:443
+    environment:
+      PORT: 443
+      ALLOWED_SITES: "*"
+      CONFIG_SCHEMA: config.json
+      PHX_SERVER: true
+      SECRET_KEY_BASE: example_SECRET_KEY_BASE
+
+      # db config
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: postgres_prod
       POSTGRES_HOSTNAME: postgres
 
   postgres:

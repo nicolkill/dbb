@@ -64,7 +64,11 @@ more would be added in future updates
 
 ### Using docker image
 
-Work in progress...
+Use the public docker image `nicolkill/dbb:latest` and add the env vars listed bellow
+
+#### Consider
+
+You need already created your database in the db server
 
 ### Cloning the repo 
 

@@ -1,4 +1,5 @@
 IMAGE_TAG := nicolkill/dbb
+IMAGE_TAG_DEV := nicolkill/dbb_dev
 REVISION := $(shell git rev-parse --short HEAD)
 RUN_STANDARD := docker run --rm -v `pwd`:/app -w /app hexpm/elixir:1.14.4-erlang-25.3-alpine-3.17.2
 
@@ -16,8 +17,8 @@ build:
                            		compile --plt'
 
 image:
-	docker build -f Dockerfile.dev -t ${IMAGE_TAG}:${REVISION} .
-	docker tag ${IMAGE_TAG}:${REVISION} ${IMAGE_TAG}:latest
+	docker build -f Dockerfile.dev -t ${IMAGE_TAG_DEV}:${REVISION} .
+	docker tag ${IMAGE_TAG_DEV}:${REVISION} ${IMAGE_TAG_DEV}:latest
 
 testing:
 	docker compose run --rm -e "MIX_ENV=test" app mix test
@@ -39,3 +40,7 @@ migrate:
 
 format:
 	docker compose exec app mix format
+
+hub_image:
+	docker build --no-cache --build-arg MIX_ENV=prod -t ${IMAGE_TAG}:${REVISION} .
+	docker tag ${IMAGE_TAG}:${REVISION} ${IMAGE_TAG}:latest
