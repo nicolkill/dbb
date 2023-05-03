@@ -64,11 +64,25 @@ defmodule DbbWeb.TableController do
     end
   end
 
+  defp validate_params(params) do
+    page =
+      params
+      |> Map.get("page", "0")
+      |> String.to_integer()
+    count =
+      params
+      |> Map.get("count", "10")
+      |> String.to_integer()
+
+    {page, count}
+  end
+
   def index(conn, params) do
     {schema, _, _} = validate_schema(params)
+    {page, count} = validate_params(params)
 
-    table = Content.list_table(schema)
-    render(conn, :index, table: table)
+    table = Content.list_table(schema, page, count)
+    render(conn, :index, table: table, page: page, count: count)
   end
 
   def show(conn, params) do

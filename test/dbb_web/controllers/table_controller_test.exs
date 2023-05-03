@@ -38,6 +38,18 @@ defmodule DbbWeb.TableControllerTest do
     end
   end
 
+  describe "index with users" do
+    setup [:create_users]
+
+    test "lists all users", %{conn: conn} do
+      conn = get(conn, "/api/v1/users?page=1&count=2")
+      assert [%{
+               "data" => %{"name" => "user 3"},
+               "schema" => "users"
+             }] = json_response(conn, 200)["data"]
+    end
+  end
+
   describe "create users" do
     test "renders users when data is valid", %{conn: conn} do
       conn = post(conn, ~p"/api/v1/users", data: @create_attrs)
@@ -75,8 +87,10 @@ defmodule DbbWeb.TableControllerTest do
   describe "update user" do
     setup [:create_users]
 
-    test "renders users when data is valid", %{conn: conn, users: %Table{id: id} = users} do
-      conn = put(conn, ~p"/api/v1/users/#{users}", data: @update_attrs)
+    test "renders users when data is valid", %{conn: conn, users: users} do
+      %Table{id: id} = user = Enum.at(users, 0)
+
+      conn = put(conn, ~p"/api/v1/users/#{user}", data: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, ~p"/api/v1/users/#{id}")
@@ -93,7 +107,8 @@ defmodule DbbWeb.TableControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, users: users} do
-      conn = put(conn, ~p"/api/v1/users/#{users}", data: @invalid_attrs)
+      user = Enum.at(users, 0)
+      conn = put(conn, ~p"/api/v1/users/#{user}", data: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -102,17 +117,21 @@ defmodule DbbWeb.TableControllerTest do
     setup [:create_users]
 
     test "deletes chosen user", %{conn: conn, users: users} do
-      conn = delete(conn, ~p"/api/v1/users/#{users}")
+      user = Enum.at(users, 0)
+      conn = delete(conn, ~p"/api/v1/users/#{user}")
       assert response(conn, 204)
 
       assert_error_sent 404, fn ->
-        get(conn, ~p"/api/v1/users/#{users}")
+        get(conn, ~p"/api/v1/users/#{user}")
       end
     end
   end
 
   defp create_users(_) do
-    user = users_fixture()
-    %{users: user}
+    user1 = users_fixture(%{data: %{name: "user 1"}})
+    user2 = users_fixture(%{data: %{name: "user 2"}})
+    user3 = users_fixture(%{data: %{name: "user 3"}})
+
+    %{users: [user1, user2, user3]}
   end
 end

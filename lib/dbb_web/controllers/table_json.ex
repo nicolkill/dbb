@@ -4,8 +4,12 @@ defmodule DbbWeb.TableJSON do
   @doc """
   Renders a list of table.
   """
-  def index(%{table: table}) do
-    %{data: for(table <- table, do: data(table))}
+  def index(%{table: table, page: page, count: count}) do
+    %{
+      page: page,
+      count: count,
+      data: for(table <- table, do: data(table))
+    }
   end
 
   @doc """

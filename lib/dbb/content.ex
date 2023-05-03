@@ -17,11 +17,15 @@ defmodule Dbb.Content do
       [%Table{}, ...]
 
   """
-  @spec list_table(String.t()) :: [Table]
-  def list_table(nil), do: []
-  def list_table(schema) do
+  @spec list_table(String.t(), number(), number()) :: [Table]
+  def list_table(nil, _, _), do: []
+  def list_table(schema, page, count) do
+    offset = ((page + 1) * count) - count
+
     Table
     |> where(schema: ^schema)
+    |> limit(^count)
+    |> offset(^offset)
     |> Repo.all()
   end
 
@@ -60,14 +64,15 @@ defmodule Dbb.Content do
       {:error, %Ecto.Changeset{}}
 
   """
+  def create_table(schema, attrs  \\ %{})
   def create_table(nil, _), do: {:error, :not_found}
-  def create_table(schema, attrs \\ %{}) do
+  def create_table(schema, attrs) do
     key =
       attrs
       |> Map.keys()
       |> Enum.at(0)
       |> is_atom()
-      |> if do: :schema, else: "schema"
+      |> if(do: :schema, else: "schema")
     attrs = Map.put(attrs, key, schema)
 
     %Table{}

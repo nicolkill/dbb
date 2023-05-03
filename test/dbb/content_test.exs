@@ -12,7 +12,7 @@ defmodule Dbb.ContentTest do
 
     test "list_table/1 returns all users" do
       users = users_fixture()
-      assert Content.list_table("users") == [users]
+      assert Content.list_table("users", 0, 10) == [users]
     end
 
     test "get_table!/2 returns the table with given id" do
