@@ -19,24 +19,26 @@ services:
       POSTGRES_DATABASE: postgres
       POSTGRES_HOSTNAME: postgres
 
-  prod:
-    image: nicolkill/dbb:latest
-    depends_on:
-      - postgres
-    ports:
-      - 4001:443
-    environment:
-      PORT: 443
-      ALLOWED_SITES: "*"
-      CONFIG_SCHEMA: config.json
-      PHX_SERVER: true
-      SECRET_KEY_BASE: example_SECRET_KEY_BASE
-
-      # db config
-      POSTGRES_USERNAME: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DATABASE: postgres_prod
-      POSTGRES_HOSTNAME: postgres
+#  prod:
+#    image: nicolkill/dbb:latest
+#    depends_on:
+#      - postgres
+#    ports:
+#      - 4001:443
+#    volumes:
+#      - ./prod_test.json:/app/prod_test.json
+#    environment:
+#      PORT: 443
+#      ALLOWED_SITES: "*"
+#      CONFIG_SCHEMA: prod_test.json
+#      PHX_SERVER: true
+#      SECRET_KEY_BASE: example_SECRET_KEY_BASE
+#
+#      # db config
+#      POSTGRES_USERNAME: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DATABASE: dbb_test_prod
+#      POSTGRES_HOSTNAME: postgres
 
   postgres:
     image: postgres:13.3-alpine

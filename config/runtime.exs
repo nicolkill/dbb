@@ -20,6 +20,10 @@ if System.get_env("PHX_SERVER") do
   config :dbb, DbbWeb.Endpoint, server: true
 end
 
+config :dbb, :general_config,
+  file: System.get_env("CONFIG_SCHEMA"),
+  api_key: System.get_env("ALLOWED_API_KEY")
+
 if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 

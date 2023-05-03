@@ -13,7 +13,7 @@ defmodule DbbWeb.TableController do
       "Atom" -> "boolean"
       "Integer" -> "number"
       "BitString" -> "string"
-      "NaiveDateTime" -> "datetime"
+      "NaiveDateTime" -> "string"
       _ -> "string"
     end
   end
@@ -27,9 +27,9 @@ defmodule DbbWeb.TableController do
     |> module_name_simple()
   end
 
-  defp extract_data(schema_config, params, name) do
+  defp extract_data(schema_config, params) do
     schema_fields = Map.get(schema_config, "fields")
-    general_data = Map.get(params, name, nil)
+    general_data = Map.get(params, "data", nil)
     is_valid? = case general_data do
       %{"data" => data} when is_map(data) ->
         Enum.reduce(schema_fields, true, fn {key, real_type}, acc ->
@@ -44,6 +44,7 @@ defmodule DbbWeb.TableController do
         true
       _ -> false
     end
+
     if is_valid?, do: {:ok, general_data}, else: {:error, nil}
   end
 
@@ -56,7 +57,7 @@ defmodule DbbWeb.TableController do
     case result do
       %{"name" => schema_name} ->
         id = Map.get(params, "id")
-        data = extract_data(result, params, schema_name)
+        data = extract_data(result, params)
 
         {schema_name, id, data}
       _ -> {nil, nil, nil}

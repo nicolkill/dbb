@@ -1,0 +1,33 @@
+{
+  "schemas": [
+    {
+      "name": "order_product",
+      "fields": {
+        "order_id": "string",
+        "product_id": "string"
+      }
+    },
+    {
+      "name": "orders",
+      "fields": {
+        "user_id": "string",
+        "delivery_time": "datetime"
+      }
+    },
+    {
+      "name": "users",
+      "fields": {
+        "email": "string",
+        "name": "string",
+        "last_name": "string"
+      }
+    },
+    {
+      "name": "products",
+      "fields": {
+        "name": "string",
+        "expiration": "datetime"
+      }
+    }
+  ]
+}

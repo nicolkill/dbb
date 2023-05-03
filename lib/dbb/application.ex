@@ -9,6 +9,7 @@ defmodule Dbb.Application do
   def start(_type, _args) do
     # manual init area
     Dbb.Cache.init()
+    Dbb.Schema.load_config()
     Dbb.Release.migrate()
 
     children = [

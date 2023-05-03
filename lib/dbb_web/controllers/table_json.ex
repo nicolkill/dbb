@@ -20,8 +20,7 @@ defmodule DbbWeb.TableJSON do
       id: table.id,
       schema: table.schema,
       reference: table.reference,
-      data: table.data,
-      deleted_at: table.deleted_at
+      data: table.data
     }
   end
 end

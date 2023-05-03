@@ -12,7 +12,6 @@ defmodule Dbb.Release do
 
   def migrate do
     repos()
-    |> IO.inspect(label: "repos")
     |> Enum.each(&apply_migrations/1)
   end
 

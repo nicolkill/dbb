@@ -26,6 +26,8 @@ just for prototypes or small/medium projects
 - [ ] General search on schema fields
 - [ ] Schema events (create, update, delete) and call a webhook by config
 - [ ] Same events but call a socket
+- [ ] Index operations pagination
+- [ ] Index operations filter by query params
 
 #### `config.json` file example:
 
@@ -66,9 +68,47 @@ more would be added in future updates
 
 Use the public docker image `nicolkill/dbb:latest` and add the env vars listed bellow
 
-#### Consider
+#### `docker-compose.yml` example
 
-You need already created your database in the db server
+```yml
+version: '3.4'
+services:
+  prod:
+    image: nicolkill/dbb:latest
+    depends_on:
+      - postgres
+    ports:
+      - 4001:443
+    volumes:
+      - ./prod_test.json:/app/prod_test.json # important add the volume
+    environment:
+      PORT: 443
+      ALLOWED_SITES: "*"
+      CONFIG_SCHEMA: prod_test.json
+      PHX_SERVER: true
+      SECRET_KEY_BASE: example_SECRET_KEY_BASE
+
+      # db config
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: dbb_test_prod
+      POSTGRES_HOSTNAME: postgres
+
+  postgres:
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432
+
+```
+
+#### Considerations
+
+You need already created your database in the db server, migrations must be run once the server starts
 
 ### Cloning the repo 
 
@@ -99,4 +139,26 @@ POSTGRES_USERNAME: postgres
 POSTGRES_PASSWORD: postgres
 POSTGRES_DATABASE: postgres
 POSTGRES_HOSTNAME: postgres
+```
+
+## Usage
+
+Like all API's, exist a basic usage on how to use it, the basic routes and operations are
+
+- `GET /:schema` - get the list of records
+- `GET /:schema/:id` - get an individual record by id
+- `POST /:schema` - save the record to database, using the body
+- `PUT /:schema/:id` - updates the record data using the body (overrides the whole data)
+- `DELETE /:schema/:id` - deletes the record data
+
+### Body
+```json
+{
+    "data": { // the rule
+        "reference": "7488a646-e31f-11e4-aace-600308960662", // another record id
+        "data": {
+            "your_field": "value"
+        }
+    }
+}
 ```

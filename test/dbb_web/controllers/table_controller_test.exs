@@ -10,14 +10,14 @@ defmodule DbbWeb.TableControllerTest do
     data: %{
       age: 20,
       male: true,
-      name: "Pancracio"
+      name: "Pancracio",
+      birth: "2023-05-02 00:00:00"
     },
     reference: "7488a646-e31f-11e4-aace-600308960662",
     schema: "users"
   }
   @update_attrs %{
     data: %{
-      age: 25,
       male: true,
       name: "Pancracio Jr"
     },
@@ -40,29 +40,34 @@ defmodule DbbWeb.TableControllerTest do
 
   describe "create users" do
     test "renders users when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/api/v1/users", users: @create_attrs)
+      conn = post(conn, ~p"/api/v1/users", data: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/v1/users/#{id}")
 
       assert %{
                "id" => ^id,
-               "data" => %{},
+               "data" => %{
+                 "age" => 20,
+                 "birth" => "2023-05-02 00:00:00",
+                 "male" => true,
+                 "name" => "Pancracio"
+               },
                "reference" => "7488a646-e31f-11e4-aace-600308960662",
                "schema" => "users"
              } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/api/v1/users", users: @invalid_attrs)
+      conn = post(conn, ~p"/api/v1/users", data: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
   describe "calls to not existing schema" do
     test "creates a record on not existing schema", %{conn: conn} do
-      conn = post(conn, ~p"/api/v1/unknown", users: @create_attrs)
-      assert %{"message" => "not valid body"} = json_response(conn, 422)
+      conn = post(conn, ~p"/api/v1/unknown", data: @create_attrs)
+      assert %{"message" => "not found body"} = json_response(conn, 422)
 
     end
   end
@@ -71,21 +76,24 @@ defmodule DbbWeb.TableControllerTest do
     setup [:create_users]
 
     test "renders users when data is valid", %{conn: conn, users: %Table{id: id} = users} do
-      conn = put(conn, ~p"/api/v1/users/#{users}", users: @update_attrs)
+      conn = put(conn, ~p"/api/v1/users/#{users}", data: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, ~p"/api/v1/users/#{id}")
 
       assert %{
                "id" => ^id,
-               "data" => %{},
+               "data" => %{
+                 "male" => true,
+                 "name" => "Pancracio Jr"
+               },
                "reference" => "7488a646-e31f-11e4-aace-600308960668",
                "schema" => "users"
              } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, users: users} do
-      conn = put(conn, ~p"/api/v1/users/#{users}", users: @invalid_attrs)
+      conn = put(conn, ~p"/api/v1/users/#{users}", data: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
