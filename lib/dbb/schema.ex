@@ -12,6 +12,8 @@ defmodule Dbb.Schema do
       |> File.read!()
       |> Jason.decode!()
 
+#    todo: validate json format
+
     Cache.save_data(@key, config)
   end
 

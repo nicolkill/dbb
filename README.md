@@ -20,6 +20,12 @@ just for prototypes or small/medium projects
 - [x] CRUD by config
 - [x] Cors configured by env var
 - [x] Data validation by config
+    - [x] String
+    - [x] Number
+    - [x] Boolean
+    - [ ] Datetime
+    - [ ] Maps
+    - [ ] UUID
 - [x] Soft delete
 - [x] Relate any record to another by a reference field
 - [x] Api key by config
@@ -27,7 +33,13 @@ just for prototypes or small/medium projects
 - [ ] Schema events (create, update, delete) and call a webhook by config
 - [ ] Same events but call a socket
 - [x] Index operations pagination
+    - [x] Page number
+    - [x] Count of elements per-page
 - [x] Index operations filter by query params
+    - [x] Contains text
+    - [x] Exists the field
+    - [x] Not exist the field
+    - [x] Multiple query fields
 
 #### `config.json` file example:
 
@@ -55,12 +67,60 @@ just for prototypes or small/medium projects
 
 Available data types
 
-- number
-- boolean
-- string
-- datetime
+- [x] number
+- [x] boolean
+- [x] string
+- [ ] datetime
+- [ ] map
+- [ ] uuid
 
 more would be added in future updates
+
+## Usage
+
+Like all API's, exist a basic usage on how to use it, the basic routes and operations are
+
+- `GET /:schema` - get the list of records
+- `GET /:schema/:id` - get an individual record by id
+- `POST /:schema` - save the record to database, using the body
+- `PUT /:schema/:id` - updates the record data using the body (overrides the whole data)
+- `DELETE /:schema/:id` - deletes the record data
+
+### Search (GET)
+
+Its possible query using your own data
+
+The syntax its the next:
+
+```
+GET /api/v1/:schema?q=field:value                  # contains text
+GET /api/v1/:schema?q=field:value;field2:value2    # multiple fields
+GET /api/v1/:schema?q=field:null                   # is null or not exists
+GET /api/v1/:schema?q=field:not_null               # not null or exists
+```
+
+### Pagination (GET)
+
+The params to paginate its simple, `page` and `count`
+
+- `page` its the number of the page
+- `count` number of elements of the page
+
+```
+GET /api/v1/:schema?page=0&count=20
+```
+
+### Body (POST/PUT)
+```json
+{
+    "data": { // the rule
+        "reference": "7488a646-e31f-11e4-aace-600308960662", // another record id
+        "data": {
+            "your_field": "value"
+        }
+    }
+}
+```
 
 ## How to run:
 
@@ -80,11 +140,11 @@ services:
     ports:
       - 4001:443
     volumes:
-      - ./prod_test.json:/app/prod_test.json # important add the volume
+      - ./prod_test.json:/app/prod_test.json    # important add the volume
     environment:
       PORT: 443
       ALLOWED_SITES: "*"
-      CONFIG_SCHEMA: prod_test.json
+      CONFIG_SCHEMA: prod_test.json             # must match with volume
       PHX_SERVER: true
       SECRET_KEY_BASE: example_SECRET_KEY_BASE
 
@@ -139,50 +199,4 @@ POSTGRES_USERNAME: postgres
 POSTGRES_PASSWORD: postgres
 POSTGRES_DATABASE: postgres
 POSTGRES_HOSTNAME: postgres
-```
-
-## Usage
-
-Like all API's, exist a basic usage on how to use it, the basic routes and operations are
-
-- `GET /:schema` - get the list of records
-- `GET /:schema/:id` - get an individual record by id
-- `POST /:schema` - save the record to database, using the body
-- `PUT /:schema/:id` - updates the record data using the body (overrides the whole data)
-- `DELETE /:schema/:id` - deletes the record data
-
-### Search (GET)
-
-Its possible query using your own data
-
-The syntax its the next:
-
-```
-GET /api/v1/:schema?q=field:value                  # contains text
-GET /api/v1/:schema?q=field:value;field2:value2    # multiple fields
-GET /api/v1/:schema?q=field:null                   # is null or not exists
-GET /api/v1/:schema?q=field:not_null               # not null or exists
-```
-
-### Pagination (GET)
-
-The params to paginate its simple, `page` and `count`
-
-- `page` its the number of the page
-- `count` number of elements of the page
-
-```
-GET /api/v1/:schema?page=0&count=20
-```
-
-### Body (POST/PUT)
-```json
-{
-    "data": { // the rule
-        "reference": "7488a646-e31f-11e4-aace-600308960662", // another record id
-        "data": {
-            "your_field": "value"
-        }
-    }
-}
 ```
