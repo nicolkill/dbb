@@ -113,9 +113,9 @@ GET /api/v1/:schema?page=0&count=20
 ### Body (POST/PUT)
 ```json
 {
-    "data": { // the rule
+    "data": {                                                // the rule
         "reference": "7488a646-e31f-11e4-aace-600308960662", // another record id
-        "data": {
+        "data": {                                            // this its your data configured in schema
             "your_field": "value"
         }
     }
