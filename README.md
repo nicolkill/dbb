@@ -27,7 +27,7 @@ just for prototypes or small/medium projects
 - [ ] Schema events (create, update, delete) and call a webhook by config
 - [ ] Same events but call a socket
 - [x] Index operations pagination
-- [ ] Index operations filter by query params
+- [x] Index operations filter by query params
 
 #### `config.json` file example:
 
