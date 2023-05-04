@@ -64,7 +64,7 @@ defmodule DbbWeb.TableController do
     end
   end
 
-  defp validate_params(params) do
+  defp pagination(params) do
     page =
       params
       |> Map.get("page", "0")
@@ -77,11 +77,27 @@ defmodule DbbWeb.TableController do
     {page, count}
   end
 
+  defp search(params) do
+    query =
+      params
+      |> Map.get("q", "")
+      |> String.split(";")
+      |> Enum.map(fn raw_tuple ->
+        case String.split(raw_tuple, ":") do
+          [key, value] -> {key, value}
+          _ -> {}
+        end
+      end)
+
+    query
+  end
+
   def index(conn, params) do
     {schema, _, _} = validate_schema(params)
-    {page, count} = validate_params(params)
+    {page, count} = pagination(params)
+    query = search(params)
 
-    table = Content.list_table(schema, page, count)
+    table = Content.list_table(schema, query, page, count)
     render(conn, :index, table: table, page: page, count: count)
   end
 

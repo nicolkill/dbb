@@ -11,8 +11,8 @@ defmodule Dbb.ContentTest do
     @invalid_attrs %{data: nil, deleted_at: nil, reference: nil, schema: nil}
 
     test "list_table/1 returns all users" do
-      users = users_fixture()
-      assert Content.list_table("users", 0, 10) == [users]
+      user = users_fixture()
+      assert Content.list_table("users", [], 0, 10) == [user]
     end
 
     test "get_table!/2 returns the table with given id" do

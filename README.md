@@ -26,7 +26,7 @@ just for prototypes or small/medium projects
 - [ ] General search on schema fields
 - [ ] Schema events (create, update, delete) and call a webhook by config
 - [ ] Same events but call a socket
-- [ ] Index operations pagination
+- [x] Index operations pagination
 - [ ] Index operations filter by query params
 
 #### `config.json` file example:
@@ -151,7 +151,31 @@ Like all API's, exist a basic usage on how to use it, the basic routes and opera
 - `PUT /:schema/:id` - updates the record data using the body (overrides the whole data)
 - `DELETE /:schema/:id` - deletes the record data
 
-### Body
+### Search (GET)
+
+Its possible query using your own data
+
+The syntax its the next:
+
+```
+GET /api/v1/:schema?q=field:value                  # contains text
+GET /api/v1/:schema?q=field:value;field2:value2    # multiple fields
+GET /api/v1/:schema?q=field:null                   # is null or not exists
+GET /api/v1/:schema?q=field:not_null               # not null or exists
+```
+
+### Pagination (GET)
+
+The params to paginate its simple, `page` and `count`
+
+- `page` its the number of the page
+- `count` number of elements of the page
+
+```
+GET /api/v1/:schema?page=0&count=20
+```
+
+### Body (POST/PUT)
 ```json
 {
     "data": { // the rule

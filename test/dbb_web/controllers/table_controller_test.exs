@@ -44,9 +44,57 @@ defmodule DbbWeb.TableControllerTest do
     test "lists all users", %{conn: conn} do
       conn = get(conn, "/api/v1/users?page=1&count=2")
       assert [%{
-               "data" => %{"name" => "user 3"},
+               "data" => %{"name" => "mike"},
                "schema" => "users"
              }] = json_response(conn, 200)["data"]
+    end
+
+    test "lists all users using null filter", %{conn: conn} do
+      conn = get(conn, "/api/v1/users?q=age:null")
+      assert [
+               %{
+                 "data" => %{"name" => "mike"},
+                 "schema" => "users"
+               },
+             ] = json_response(conn, 200)["data"]
+    end
+
+    test "lists all users using not null filter", %{conn: conn} do
+      conn = get(conn, "/api/v1/users?q=age:not_null")
+      assert [
+               %{
+                 "data" => %{"name" => "jhon"},
+                 "schema" => "users"
+               },
+               %{
+                 "data" => %{"name" => "jim"},
+                 "schema" => "users"
+               }
+             ] = json_response(conn, 200)["data"]
+    end
+
+    test "lists all users that starts with the letter 'j'", %{conn: conn} do
+      conn = get(conn, "/api/v1/users?q=name:j")
+      assert [
+               %{
+                 "data" => %{"name" => "jhon"},
+                 "schema" => "users"
+               },
+               %{
+                 "data" => %{"name" => "jim"},
+                 "schema" => "users"
+               }
+             ] = json_response(conn, 200)["data"]
+    end
+
+    test "lists all users that starts with the word 'mike'", %{conn: conn} do
+      conn = get(conn, "/api/v1/users?q=name:mike")
+      assert [
+               %{
+                 "data" => %{"name" => "mike"},
+                 "schema" => "users"
+               }
+             ] = json_response(conn, 200)["data"]
     end
   end
 
@@ -128,9 +176,9 @@ defmodule DbbWeb.TableControllerTest do
   end
 
   defp create_users(_) do
-    user1 = users_fixture(%{data: %{name: "user 1"}})
-    user2 = users_fixture(%{data: %{name: "user 2"}})
-    user3 = users_fixture(%{data: %{name: "user 3"}})
+    user1 = users_fixture(%{data: %{name: "jhon", age: 20}})
+    user2 = users_fixture(%{data: %{name: "jim", age: 22}})
+    user3 = users_fixture(%{data: %{name: "mike"}})
 
     %{users: [user1, user2, user3]}
   end

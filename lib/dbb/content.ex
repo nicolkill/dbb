@@ -8,6 +8,33 @@ defmodule Dbb.Content do
 
   alias Dbb.Content.Table
 
+  defp dynamic_filters([]), do: true
+  defp dynamic_filters([{}]), do: true
+  defp dynamic_filters(query) do
+    Enum.reduce(query, false, fn
+      {key, "null"}, criteria ->
+        dynamic([t], is_nil(json_extract_path(t.data, [^key])) or ^criteria)
+      {key, "not_null"}, criteria ->
+        dynamic([t], not is_nil(json_extract_path(t.data, [^key])) or ^criteria)
+      {key, value}, criteria ->
+        value =
+          value
+          |> String.replace("%", "")
+          |> String.replace("_", "")
+          |> (&("%#{&1}%")).()
+        dynamic(
+          [t],
+          ilike(
+            type(
+              json_extract_path(t.data, [^key]),
+              :string
+            ),
+            ^value
+          ) or ^criteria
+        )
+    end)
+  end
+
   @doc """
   Returns the list of table.
 
@@ -17,13 +44,16 @@ defmodule Dbb.Content do
       [%Table{}, ...]
 
   """
-  @spec list_table(String.t(), number(), number()) :: [Table]
-  def list_table(nil, _, _), do: []
-  def list_table(schema, page, count) do
+  @spec list_table(String.t(), list(), number(), number()) :: [Table]
+  def list_table(nil, _, _, _), do: []
+  def list_table(schema, query, page, count) do
+    criteria = dynamic_filters(query)
+
     offset = ((page + 1) * count) - count
 
     Table
     |> where(schema: ^schema)
+    |> where(^criteria)
     |> limit(^count)
     |> offset(^offset)
     |> Repo.all()
