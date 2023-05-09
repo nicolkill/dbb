@@ -29,7 +29,10 @@ just for prototypes or small/medium projects
 - [x] Soft delete
 - [x] Relate any record to another by a reference field
 - [x] Api key by config
-- [ ] General search on schema fields
+- [ ] Query with joins in tables
+- [ ] Types of schema
+    - [ ] Regular tables
+    - [ ] Synchronized tables (for likes, follows, etc)
 - [ ] Schema events (create, update, delete) and call a webhook by config
 - [ ] Same events but call a socket
 - [x] Index operations pagination
@@ -40,6 +43,7 @@ just for prototypes or small/medium projects
     - [x] Exists the field
     - [x] Not exist the field
     - [x] Multiple query fields
+    - [ ] Related fields aggregation
 
 #### `config.json` file example:
 
