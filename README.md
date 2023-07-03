@@ -193,6 +193,7 @@ POSTGRES_HOSTNAME: postgres
 ## Roadmap
 
 - [x] Config database schema by file config
+- [ ] Swagger
 - [x] CRUD by config
 - [x] Cors configured by env var
 - [x] Data validation by config
