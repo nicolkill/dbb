@@ -43,7 +43,16 @@ just for prototypes or small/medium projects
         "age": "number",
         "male": "boolean"
       },
-      "hooks": [""]
+      "hooks": [
+        {
+          "events": ["index"],
+          "url": "",
+          "method": "get",
+          "headers": {
+            "key": "value"
+          }
+        }
+      ]
     },
     {
       "name": "products",
