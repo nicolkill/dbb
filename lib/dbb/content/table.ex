@@ -26,6 +26,7 @@ defmodule Dbb.Content.Table do
     |> cast(attrs, @fields)
     |> validate_required(@required_fields)
   end
+
   def changeset_delete(table, attrs) do
     table
     |> cast(attrs, @soft_delete_fields)

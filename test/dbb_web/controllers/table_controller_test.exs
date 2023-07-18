@@ -25,8 +25,6 @@ defmodule DbbWeb.TableControllerTest do
   }
   @invalid_attrs %{data: nil, deleted_at: nil, reference: nil, schema: nil}
 
-
-
   setup %{conn: conn} do
     Schema.load_config()
 
@@ -45,24 +43,29 @@ defmodule DbbWeb.TableControllerTest do
 
     test "lists all users", %{conn: conn} do
       conn = get(conn, "/api/v1/users?page=1&count=2")
-      assert [%{
-               "data" => %{"name" => "mike"},
-               "schema" => "users"
-             }] = json_response(conn, 200)["data"]
-    end
 
-    test "lists all users using null filter", %{conn: conn} do
-      conn = get(conn, "/api/v1/users?q=age:null")
       assert [
                %{
                  "data" => %{"name" => "mike"},
                  "schema" => "users"
-               },
+               }
+             ] = json_response(conn, 200)["data"]
+    end
+
+    test "lists all users using null filter", %{conn: conn} do
+      conn = get(conn, "/api/v1/users?q=age:null")
+
+      assert [
+               %{
+                 "data" => %{"name" => "mike"},
+                 "schema" => "users"
+               }
              ] = json_response(conn, 200)["data"]
     end
 
     test "lists all users using not null filter", %{conn: conn} do
       conn = get(conn, "/api/v1/users?q=age:not_null")
+
       assert [
                %{
                  "data" => %{"name" => "jhon"},
@@ -77,6 +80,7 @@ defmodule DbbWeb.TableControllerTest do
 
     test "lists all users that starts with the letter 'j'", %{conn: conn} do
       conn = get(conn, "/api/v1/users?q=name:j")
+
       assert [
                %{
                  "data" => %{"name" => "jhon"},
@@ -91,6 +95,7 @@ defmodule DbbWeb.TableControllerTest do
 
     test "lists all users that starts with the word 'mike'", %{conn: conn} do
       conn = get(conn, "/api/v1/users?q=name:mike")
+
       assert [
                %{
                  "data" => %{"name" => "mike"},
@@ -135,7 +140,6 @@ defmodule DbbWeb.TableControllerTest do
     test "creates a record on not existing schema", %{conn: conn} do
       conn = post(conn, ~p"/api/v1/unknown", data: @create_attrs)
       assert %{"message" => "not found body"} = json_response(conn, 422)
-
     end
   end
 

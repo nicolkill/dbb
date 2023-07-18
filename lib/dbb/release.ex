@@ -35,17 +35,15 @@ defmodule Dbb.Release do
       {:up, _, _} -> false
     end)
     |> case do
-         [] ->
-           Logger.info("there's no pending migrations for repo #{inspect(repo)}")
+      [] ->
+        Logger.info("there's no pending migrations for repo #{inspect(repo)}")
 
-         pending ->
-           Logger.info(
-             "there's pending migrations for repo #{inspect(repo)}, pending migrations: #{
-               inspect(pending)
-             }"
-           )
+      pending ->
+        Logger.info(
+          "there's pending migrations for repo #{inspect(repo)}, pending migrations: #{inspect(pending)}"
+        )
 
-           {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :up, all: true))
-       end
+        {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :up, all: true))
+    end
   end
 end

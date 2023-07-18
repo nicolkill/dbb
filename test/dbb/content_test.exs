@@ -39,6 +39,7 @@ defmodule Dbb.ContentTest do
 
     test "update_table/2 with valid data updates the users" do
       user = users_fixture()
+
       update_attrs = %{
         data: %{},
         reference: "7488a646-e31f-11e4-aace-600308960668"

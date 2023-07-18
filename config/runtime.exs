@@ -28,7 +28,7 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :dbb, Dbb.Repo,
-    ssl: (System.get_env("POSTGRES_SSL") == 'true'),
+    ssl: System.get_env("POSTGRES_SSL") == 'true',
     username: System.get_env("POSTGRES_USERNAME"),
     password: System.get_env("POSTGRES_PASSWORD"),
     hostname: System.get_env("POSTGRES_HOSTNAME"),

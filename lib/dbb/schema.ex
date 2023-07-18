@@ -1,5 +1,4 @@
 defmodule Dbb.Schema do
-
   alias Dbb.Cache
 
   @key :schema_config
@@ -12,7 +11,7 @@ defmodule Dbb.Schema do
       |> File.read!()
       |> Jason.decode!()
 
-#    todo: validate json format
+    #    todo: validate json format
 
     Cache.save_data(@key, config)
   end
@@ -23,5 +22,4 @@ defmodule Dbb.Schema do
       _ -> nil
     end
   end
-
 end

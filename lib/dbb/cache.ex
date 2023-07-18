@@ -55,5 +55,4 @@ defmodule Dbb.Cache do
   def clean() do
     :ets.delete_all_objects(@cache_table)
   end
-
 end

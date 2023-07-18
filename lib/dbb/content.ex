@@ -10,18 +10,22 @@ defmodule Dbb.Content do
 
   defp dynamic_filters([]), do: true
   defp dynamic_filters([{}]), do: true
+
   defp dynamic_filters(query) do
     Enum.reduce(query, false, fn
       {key, "null"}, criteria ->
         dynamic([t], is_nil(json_extract_path(t.data, [^key])) or ^criteria)
+
       {key, "not_null"}, criteria ->
         dynamic([t], not is_nil(json_extract_path(t.data, [^key])) or ^criteria)
+
       {key, value}, criteria ->
         value =
           value
           |> String.replace("%", "")
           |> String.replace("_", "")
-          |> (&("%#{&1}%")).()
+          |> (&"%#{&1}%").()
+
         dynamic(
           [t],
           ilike(
@@ -46,10 +50,11 @@ defmodule Dbb.Content do
   """
   @spec list_table(String.t(), list(), number(), number()) :: [Table]
   def list_table(nil, _, _, _), do: []
+
   def list_table(schema, query, page, count) do
     criteria = dynamic_filters(query)
 
-    offset = ((page + 1) * count) - count
+    offset = (page + 1) * count - count
 
     Table
     |> where(schema: ^schema)
@@ -75,6 +80,7 @@ defmodule Dbb.Content do
   """
   @spec get_table!(String.t(), String.t()) :: Table
   def get_table!(nil, _), do: {:error, :not_found}
+
   def get_table!(schema, id) do
     Table
     |> where(schema: ^schema)
@@ -94,8 +100,9 @@ defmodule Dbb.Content do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_table(schema, attrs  \\ %{})
+  def create_table(schema, attrs \\ %{})
   def create_table(nil, _), do: {:error, :not_found}
+
   def create_table(schema, attrs) do
     key =
       attrs
@@ -103,6 +110,7 @@ defmodule Dbb.Content do
       |> Enum.at(0)
       |> is_atom()
       |> if(do: :schema, else: "schema")
+
     attrs = Map.put(attrs, key, schema)
 
     %Table{}
