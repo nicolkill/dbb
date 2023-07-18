@@ -7,7 +7,17 @@
         "age": "number",
         "male": "boolean",
         "birth": "datetime"
-      }
+      },
+      "hooks": [
+        {
+          "events": ["create"],
+          "url": "https://someurl.test/webhook",
+          "method": "post",
+          "headers": {
+            "key": "value"
+          }
+        }
+      ]
     },
     {
       "name": "products",

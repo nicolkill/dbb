@@ -25,6 +25,8 @@ defmodule DbbWeb.TableControllerTest do
   }
   @invalid_attrs %{data: nil, deleted_at: nil, reference: nil, schema: nil}
 
+
+
   setup %{conn: conn} do
     Schema.load_config()
 
@@ -100,6 +102,11 @@ defmodule DbbWeb.TableControllerTest do
 
   describe "create users" do
     test "renders users when data is valid", %{conn: conn} do
+      Tesla.Mock.mock(fn
+        %{method: :post, url: "https://someurl.test/webhook"} ->
+          %Tesla.Env{status: 200, url: "https://someurl.test/webhook", body: %{"status" => "Ok"}}
+      end)
+
       conn = post(conn, ~p"/api/v1/users", data: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 

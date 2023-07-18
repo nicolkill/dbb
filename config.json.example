@@ -6,7 +6,17 @@
         "name": "string",
         "age": "number",
         "male": "boolean"
-      }
+      },
+      "hooks": [
+        {
+          "events": ["index"],
+          "url": "https://someurl.test/webhook",
+          "method": "get",
+          "headers": {
+            "key": "value"
+          }
+        }
+      ]
     },
     {
       "name": "products",
