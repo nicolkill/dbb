@@ -146,6 +146,6 @@ defmodule Dbb.TableHandler do
     do:
       get_config_schema(schema_name)
       |> Map.get("hooks")
-      |> Enum.filter(&(to_string(event) in Map.get(&1, "events")))
+      |> Enum.filter(&Enum.member?(Map.get(&1, "events"), to_string(event)))
       |> call_hooks(params, value)
 end

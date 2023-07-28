@@ -1,4 +1,4 @@
-defmodule Dbb.MixProject do
+defmodule EasyBrokerTest.MixProject do
   use Mix.Project
 
   def project do
@@ -42,7 +42,8 @@ defmodule Dbb.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:cors_plug, "~> 3.0"},
       {:tesla, "~> 1.4"},
-      {:hackney, "~> 1.17"}
+      {:hackney, "~> 1.17"},
+      {:map_schema_validator, "~> 0.1.5"}
     ]
   end
 

@@ -163,7 +163,7 @@ GET /api/v1/:schema?page=0&count=20
 ```
 
 ### Body (POST/PUT)
-```json
+```jsmin
 {
     "data": {                                                // the rule
         "reference": "7488a646-e31f-11e4-aace-600308960662", // another record id
@@ -255,6 +255,7 @@ POSTGRES_HOSTNAME: postgres
 ## Roadmap
 
 - [x] Config database schema by file config
+    - [x] Validate config file on startup ([map_schema_validator](https://github.com/nicolkill/map_schema_validator))
 - [ ] Swagger
 - [x] CRUD by config
 - [x] Cors configured by env var
