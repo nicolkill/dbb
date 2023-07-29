@@ -1,4 +1,7 @@
-# Dbb
+[![GitHub release](https://img.shields.io/github/v/release/nicolkill/dbb)](https://github.com/nicolkill/dbb/releases)
+[![Docker Image Size](https://img.shields.io/docker/image-size/nicolkill/dbb?sort=semver)](https://hub.docker.com/r/nicolkill/dbb "Click to view the image on Docker Hub")
+[![Docker stars](https://img.shields.io/docker/stars/nicolkill/dbb.svg)](https://hub.docker.com/r/nicolkill/dbb 'DockerHub')
+[![Docker pulls](https://img.shields.io/docker/pulls/nicolkill/dbb.svg)](https://hub.docker.com/r/nicolkill/dbb 'DockerHub')
 
 ## Index
 
@@ -178,7 +181,8 @@ GET /api/v1/:schema?page=0&count=20
 
 ### Using docker image
 
-Use the public docker image `nicolkill/dbb:latest` and add the env vars listed bellow
+Use the public docker image [`nicolkill/dbb:latest`](https://hub.docker.com/r/nicolkill/dbb) and add the env vars listed
+bellow
 
 #### `docker-compose.yml` example
 
