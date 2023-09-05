@@ -8,27 +8,6 @@ defmodule Dbb.TableHandler do
       |> Map.get("schemas")
       |> Enum.find(&(Map.get(&1, "name") == schema_name))
 
-  defp module_name_simple(type) do
-    case type do
-      "Float" -> "number"
-      "Atom" -> "boolean"
-      "Integer" -> "number"
-      "BitString" -> "string"
-      "NaiveDateTime" -> "string"
-      _ -> "string"
-    end
-  end
-
-  defp get_data_type(nil), do: nil
-
-  defp get_data_type(value) do
-    value
-    |> IEx.Info.info()
-    |> Enum.find(&(elem(&1, 0) == "Data type"))
-    |> elem(1)
-    |> module_name_simple()
-  end
-
   defp extract_data(schema_config, params) do
     schema_fields = Map.get(schema_config, "fields")
     general_data = Map.get(params, "data", nil)
@@ -36,17 +15,15 @@ defmodule Dbb.TableHandler do
     is_valid? =
       case general_data do
         %{"data" => data} when is_map(data) ->
-          Enum.reduce(schema_fields, true, fn {key, real_type}, acc ->
-            value_type =
-              data
-              |> Map.get(key)
-              |> get_data_type()
 
-            acc and real_type == value_type
-          end)
+          schema_fields =
+            Enum.reduce(
+              schema_fields,
+              %{},
+              &Map.put(&2, String.to_atom("#{elem(&1, 0)}?"), String.to_atom(elem(&1, 1)))
+            )
 
-          true
-
+          {:ok, nil} == MapSchemaValidator.validate(schema_fields, data)
         _ ->
           false
       end

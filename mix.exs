@@ -43,7 +43,7 @@ defmodule EasyBrokerTest.MixProject do
       {:cors_plug, "~> 3.0"},
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
-      {:map_schema_validator, "~> 0.1.5"}
+      {:map_schema_validator, "~> 0.1.7"}
     ]
   end
 
