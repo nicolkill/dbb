@@ -9,6 +9,7 @@ defmodule Dbb.Schema do
     schemas: [
       %{
         name: :string,
+        description?: :string,
         fields: %{
           string: :string
         },
@@ -52,6 +53,7 @@ defmodule Dbb.Schema do
     case MapSchemaValidator.validate(@schema_format, config) do
       {:ok, _} ->
         Cache.save_data(@key, config)
+        Dbb.Swagger.generate_swagger(config)
 
       {:error, %MapSchemaValidator.InvalidMapError{message: message}} ->
         raise InvalidConfigFileError, message: message

@@ -7,23 +7,16 @@ defmodule DbbWeb.TableControllerTest do
   alias Dbb.Content.Table
 
   @create_attrs %{
-    data: %{
-      age: 20,
-      male: true,
-      name: "Pancracio",
-      birth: "2023-05-02 00:00:00"
-    },
-    reference: "7488a646-e31f-11e4-aace-600308960662",
-    schema: "users"
+    age: 20,
+    male: true,
+    name: "Pancracio",
+    birth: "2023-05-02 00:00:00"
   }
   @update_attrs %{
-    data: %{
-      male: true,
-      name: "Pancracio Jr"
-    },
-    reference: "7488a646-e31f-11e4-aace-600308960668"
+    male: true,
+    name: "Pancracio Jr"
   }
-  @invalid_attrs %{data: nil, deleted_at: nil, reference: nil, schema: nil}
+  @invalid_attrs nil
 
   setup %{conn: conn} do
     Schema.load_config()
@@ -125,7 +118,7 @@ defmodule DbbWeb.TableControllerTest do
                  "male" => true,
                  "name" => "Pancracio"
                },
-               "reference" => "7488a646-e31f-11e4-aace-600308960662",
+               "reference" => nil,
                "schema" => "users"
              } = json_response(conn, 200)["data"]
     end
@@ -160,7 +153,7 @@ defmodule DbbWeb.TableControllerTest do
                  "male" => true,
                  "name" => "Pancracio Jr"
                },
-               "reference" => "7488a646-e31f-11e4-aace-600308960668",
+               "reference" => nil,
                "schema" => "users"
              } = json_response(conn, 200)["data"]
     end
@@ -187,9 +180,9 @@ defmodule DbbWeb.TableControllerTest do
   end
 
   defp create_users(_) do
-    user1 = users_fixture(%{data: %{name: "jhon", age: 20}})
-    user2 = users_fixture(%{data: %{name: "jim", age: 22}})
-    user3 = users_fixture(%{data: %{name: "mike"}})
+    user1 = users_fixture(%{name: "jhon", age: 20})
+    user2 = users_fixture(%{name: "jim", age: 22})
+    user3 = users_fixture(%{name: "mike"})
 
     %{users: [user1, user2, user3]}
   end

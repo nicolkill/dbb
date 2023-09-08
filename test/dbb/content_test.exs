@@ -8,7 +8,7 @@ defmodule Dbb.ContentTest do
 
     import Dbb.ContentFixtures
 
-    @invalid_attrs %{data: nil, deleted_at: nil, reference: nil, schema: nil}
+    @invalid_attrs nil
 
     test "list_table/1 returns all users" do
       user = users_fixture()
@@ -21,15 +21,10 @@ defmodule Dbb.ContentTest do
     end
 
     test "create_table/2 with valid data creates a user" do
-      valid_attrs = %{
-        data: %{},
-        reference: "7488a646-e31f-11e4-aace-600308960662",
-        schema: "users"
-      }
+      valid_attrs = %{}
 
       assert {:ok, %Table{} = user} = Content.create_table("users", valid_attrs)
       assert user.data == %{}
-      assert user.reference == "7488a646-e31f-11e4-aace-600308960662"
       assert user.schema == "users"
     end
 
@@ -40,14 +35,10 @@ defmodule Dbb.ContentTest do
     test "update_table/2 with valid data updates the users" do
       user = users_fixture()
 
-      update_attrs = %{
-        data: %{},
-        reference: "7488a646-e31f-11e4-aace-600308960668"
-      }
+      update_attrs = %{}
 
       assert {:ok, %Table{} = user} = Content.update_table(user, update_attrs)
       assert user.data == %{}
-      assert user.reference == "7488a646-e31f-11e4-aace-600308960668"
     end
 
     test "update_table/2 with invalid data returns error changeset" do

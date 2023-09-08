@@ -15,4 +15,8 @@ defmodule DbbWeb.Router do
     put "/:schema/:id", TableController, :update
     delete "/:schema/:id", TableController, :delete
   end
+
+  scope "/api_docs/v1" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :dbb, swagger_file: "swagger.json"
+  end
 end

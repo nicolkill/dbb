@@ -14,8 +14,7 @@ defmodule Dbb.TableHandler do
 
     is_valid? =
       case general_data do
-        %{"data" => data} when is_map(data) ->
-
+        data when is_map(data) ->
           schema_fields =
             Enum.reduce(
               schema_fields,
@@ -24,6 +23,7 @@ defmodule Dbb.TableHandler do
             )
 
           {:ok, nil} == MapSchemaValidator.validate(schema_fields, data)
+
         _ ->
           false
       end
@@ -32,10 +32,8 @@ defmodule Dbb.TableHandler do
   end
 
   def validate_schema(%{"schema" => schema} = params) do
-    schema = get_config_schema(schema)
-
-    case schema do
-      %{"name" => schema_name} ->
+    case get_config_schema(schema) do
+      %{"name" => schema_name} = schema ->
         id = Map.get(params, "id")
         data = extract_data(schema, params)
 
@@ -122,7 +120,7 @@ defmodule Dbb.TableHandler do
   def hooks(event, schema_name, params, value \\ %{}),
     do:
       get_config_schema(schema_name)
-      |> Map.get("hooks")
+      |> Map.get("hooks", [])
       |> Enum.filter(&Enum.member?(Map.get(&1, "events"), to_string(event)))
       |> call_hooks(params, value)
 end

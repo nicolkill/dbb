@@ -88,6 +88,15 @@ defmodule Dbb.Content do
     |> Repo.get!(id)
   end
 
+  defp is_atom_key(nil), do: true
+
+  defp is_atom_key(attrs),
+    do:
+      attrs
+      |> Map.keys()
+      |> Enum.at(0)
+      |> is_atom()
+
   @doc """
   Creates a table.
 
@@ -104,14 +113,12 @@ defmodule Dbb.Content do
   def create_table(nil, _), do: {:error, :not_found}
 
   def create_table(schema, attrs) do
-    key =
-      attrs
-      |> Map.keys()
-      |> Enum.at(0)
-      |> is_atom()
-      |> if(do: :schema, else: "schema")
+    {data_key, schema_key} = if is_atom_key(attrs), do: {:data, :schema}, else: {"data", "schema"}
 
-    attrs = Map.put(attrs, key, schema)
+    attrs =
+      %{}
+      |> Map.put(data_key, attrs)
+      |> Map.put(schema_key, schema)
 
     %Table{}
     |> Table.changeset(attrs)
@@ -131,6 +138,10 @@ defmodule Dbb.Content do
 
   """
   def update_table(%Table{} = table, attrs) do
+    data_key = if is_atom_key(attrs), do: :data, else: "data"
+
+    attrs = Map.put(%{}, data_key, attrs)
+
     table
     |> Table.changeset(attrs)
     |> Repo.update()

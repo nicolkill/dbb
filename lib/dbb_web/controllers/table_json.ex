@@ -24,7 +24,9 @@ defmodule DbbWeb.TableJSON do
       id: table.id,
       schema: table.schema,
       reference: table.reference,
-      data: table.data
+      data: table.data,
+      inserted_at: table.inserted_at,
+      updated_at: table.updated_at
     }
   end
 end
