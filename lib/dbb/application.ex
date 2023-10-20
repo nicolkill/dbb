@@ -13,16 +13,14 @@ defmodule Dbb.Application do
     Dbb.Release.migrate()
 
     children = [
-      # Start the Telemetry supervisor
       DbbWeb.Telemetry,
-      # Start the Ecto repository
       Dbb.Repo,
-      # Start the PubSub system
+      {DNSCluster, query: Application.get_env(:dbb, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Dbb.PubSub},
-      # Start the Endpoint (http/https)
-      DbbWeb.Endpoint
       # Start a worker by calling: Dbb.Worker.start_link(arg)
-      # {Dbb.Worker, arg}
+      # {Dbb.Worker, arg},
+      # Start to serve requests, typically the last entry
+      DbbWeb.Endpoint
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

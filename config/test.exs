@@ -17,7 +17,7 @@ config :dbb, Dbb.Repo,
 # you can enable the server option below.
 config :dbb, DbbWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "o/QfYk5NOEdi2vp/L8lioLNgKGUGRD+gdBBC/Iq9MH9OxYyef8AE3Jhb9mtbTzLu",
+  secret_key_base: "4imLAd9ZAHcc2eZQmYx/vbafvEAp4TnLSrQaC3oxA4AhhyXNdvR5NL9Xq8Ue+xoP",
   server: false
 
 # Print only warnings and errors during test

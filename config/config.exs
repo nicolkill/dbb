@@ -9,25 +9,49 @@ import Config
 
 config :dbb,
   ecto_repos: [Dbb.Repo],
-  generators: [binary_id: true]
+  generators: [timestamp_type: :utc_datetime, binary_id: true]
 
+# cors config
 allowed_sites =
   System.get_env("ALLOWED_SITES") ||
     "*"
     |> String.split(",")
 
 config :cors_plug,
-  origin: allowed_sites
+       origin: allowed_sites
 
 # Configures the endpoint
 config :dbb, DbbWeb.Endpoint,
   url: [host: "localhost"],
+  adapter: Phoenix.Endpoint.Cowboy2Adapter,
   render_errors: [
-    formats: [json: DbbWeb.ErrorJSON],
+    formats: [html: DbbWeb.ErrorHTML, json: DbbWeb.ErrorJSON],
     layout: false
   ],
   pubsub_server: Dbb.PubSub,
-  live_view: [signing_salt: "PVwpobeo"]
+  live_view: [signing_salt: "jqONnOxx"]
+
+# Configure esbuild (the version is required)
+config :esbuild,
+  version: "0.17.11",
+  default: [
+    args:
+      ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
+# Configure tailwind (the version is required)
+config :tailwind,
+  version: "3.3.2",
+  default: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../assets", __DIR__)
+  ]
 
 # Configures Elixir's Logger
 config :logger, :console,
