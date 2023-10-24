@@ -18,7 +18,8 @@ defmodule DbbWeb.Router do
   scope "/", DbbWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+#    get "/", Page.PageController, :home
+    live "/", Admin.AdminLive
   end
 
   scope "/api/v1", DbbWeb do

@@ -1,4 +1,4 @@
-defmodule DbbWeb.PageControllerTest do
+defmodule DbbWeb.Page.PageControllerTest do
   use DbbWeb.ConnCase
 
   test "GET /", %{conn: conn} do

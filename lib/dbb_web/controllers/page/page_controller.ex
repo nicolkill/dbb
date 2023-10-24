@@ -1,4 +1,4 @@
-defmodule DbbWeb.PageController do
+defmodule DbbWeb.Page.PageController do
   use DbbWeb, :controller
 
   def home(conn, _params) do

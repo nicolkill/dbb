@@ -596,6 +596,43 @@ defmodule DbbWeb.CoreComponents do
     """
   end
 
+
+  @doc """
+  Renders a navbar with all the defined schemas.
+
+  ## Examples
+
+      <.navbar title="dbb" />
+
+  """
+  attr :title, :string, required: true
+
+  def navbar(assigns) do
+    schemas =
+      Dbb.Schema.get_config()
+      |> Map.get("schemas")
+      |> Enum.map(&Map.get(&1, "name"))
+
+    assigns = assign(assigns, :schemas, schemas)
+
+    ~H"""
+    <header class="px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+        <div class="flex items-center gap-4">
+          <span class="font-bold">
+            <%= @title %>
+          </span>
+        </div>
+        <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
+          <a :for={schema <- @schemas} href={"/#{schema}"} class="rounded px-2 text-white bg-gray-500 hover:bg-gray-900">
+            <%= String.capitalize(schema) %>
+          </a>
+        </div>
+      </div>
+    </header>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do

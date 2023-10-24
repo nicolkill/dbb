@@ -62,6 +62,10 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 config :tesla, adapter: Tesla.Adapter.Hackney
 
+config :dbb, :general_config,
+       file: System.get_env("CONFIG_SCHEMA"),
+       api_key: System.get_env("ALLOWED_API_KEY")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
