@@ -20,6 +20,7 @@ defmodule DbbWeb.Router do
 
 #    get "/", Page.PageController, :home
     live "/", Admin.AdminLive
+    live "/:schema", AdminTable.AdminTableLive
   end
 
   scope "/api/v1", DbbWeb do

@@ -1,0 +1,20 @@
+<div class="flex gap-1">
+  <div class="grow">
+  </div>
+  <div class="flex-none">
+    <a class="bg-green-700 text-white px-4 py-1 rounded text-lg" href={link(:create, @schema_name)}>Add</a>
+  </div>
+</div>
+
+<table class="table-auto">
+  <thead>
+    <tr>
+      <th :for={{field_name, _field_type} <- @schema_fields}><%= String.capitalize(field_name) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr :for={row <- @table_data}>
+      <td :for={{field_name, _field_type} <- @schema_fields}><%= Map.get(row, field_name) %></td>
+    </tr>
+  </tbody>
+</table>

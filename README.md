@@ -292,3 +292,5 @@ POSTGRES_HOSTNAME: postgres
     - [x] Not exist the field
     - [x] Multiple query fields
     - [ ] Related fields aggregation
+- [ ] Admin panel (CRUD)
+    - [ ] Panel type of view's from config file
