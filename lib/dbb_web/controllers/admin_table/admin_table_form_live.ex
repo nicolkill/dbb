@@ -64,6 +64,10 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
 
     {:ok, %Table{id: id}} = apply(Content, func, args)
 
+#    action
+#    |> String.to_atom()
+#    |> TableHandler.hooks(schema_name, %{}, record)
+
     socket =
       socket
       |> put_flash(:info, @saved_message)

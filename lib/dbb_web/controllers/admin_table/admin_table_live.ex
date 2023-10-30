@@ -51,13 +51,11 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
   end
 
   def handle_event("delete", %{"row-id" => id}, socket) do
-    id
-    |> IO.inspect(label: "@@@@@@@@@@@@@@")
-
     {:noreply, assign(socket, :to_delete, id)}
   end
 
   def handle_event("delete-record", _, socket) do
+    schema_name = get_assign(socket, :schema_name)
     to_delete_id = get_assign(socket, :to_delete)
 
     {table_data, table_record} =
@@ -71,6 +69,8 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
       end)
 
     {:ok, %Table{}} = Content.delete_table_record(table_record)
+
+#    TableHandler.hooks(:delete, schema_name, %{}, table_record)
 
     socket =
       socket
