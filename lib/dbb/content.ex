@@ -44,21 +44,28 @@ defmodule Dbb.Content do
 
   ## Examples
 
-      iex> list_table("some_schema")
+      iex> list_table_records("some_schema")
       [%Table{}, ...]
 
   """
-  @spec list_table(String.t(), list(), number(), number()) :: [Table]
-  def list_table(nil, _, _, _), do: []
+  @spec list_table_records(String.t(), list(), number(), number(), boolean()) :: [Table]
+  def list_table_records(nil, _, _, _), do: []
 
-  def list_table(schema, query, page, count) do
+  def list_table_records(schema, query, page, count, soft_delete \\ true) do
     criteria = dynamic_filters(query)
 
     offset = (page + 1) * count - count
 
-    Table
-    |> where(schema: ^schema)
-    |> where(^criteria)
+    query =
+      Table
+      |> where(schema: ^schema)
+      |> where(^criteria)
+
+    if soft_delete do
+      where(query, [t], is_nil(t.deleted_at))
+    else
+      where(query, [t], not is_nil(t.deleted_at))
+    end
     |> limit(^count)
     |> offset(^offset)
     |> Repo.all()
@@ -71,17 +78,17 @@ defmodule Dbb.Content do
 
   ## Examples
 
-      iex> get_table!("some_schema", 123)
+      iex> get_table_record!("some_schema", 123)
       %Table{}
 
-      iex> get_table!(456)
+      iex> get_table_record!(456)
       ** (Ecto.NoResultsError)
 
   """
-  @spec get_table!(String.t(), String.t()) :: Table
-  def get_table!(nil, _), do: {:error, :not_found}
+  @spec get_table_record!(String.t(), String.t()) :: Table
+  def get_table_record!(nil, _), do: {:error, :not_found}
 
-  def get_table!(schema, id) do
+  def get_table_record!(schema, id) do
     Table
     |> where(schema: ^schema)
     |> where([t], is_nil(t.deleted_at))
@@ -102,17 +109,17 @@ defmodule Dbb.Content do
 
   ## Examples
 
-      iex> create_table(%{field: value})
+      iex> create_table_record(%{field: value})
       {:ok, %Table{}}
 
-      iex> create_table(%{field: bad_value})
+      iex> create_table_record(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_table(schema, attrs \\ %{})
-  def create_table(nil, _), do: {:error, :not_found}
+  def create_table_record(schema, attrs \\ %{})
+  def create_table_record(nil, _), do: {:error, :not_found}
 
-  def create_table(schema, attrs) do
+  def create_table_record(schema, attrs) do
     {data_key, schema_key} = if is_atom_key(attrs), do: {:data, :schema}, else: {"data", "schema"}
 
     attrs =
@@ -130,14 +137,14 @@ defmodule Dbb.Content do
 
   ## Examples
 
-      iex> update_table(table, %{field: new_value})
+      iex> update_table_record(table, %{field: new_value})
       {:ok, %Table{}}
 
-      iex> update_table(table, %{field: bad_value})
+      iex> update_table_record(table, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_table(%Table{} = table, attrs) do
+  def update_table_record(%Table{} = table, attrs) do
     data_key = if is_atom_key(attrs), do: :data, else: "data"
 
     attrs = Map.put(%{}, data_key, attrs)
@@ -152,14 +159,14 @@ defmodule Dbb.Content do
 
   ## Examples
 
-      iex> delete_table(table)
+      iex> delete_table_record(table)
       {:ok, %Table{}}
 
-      iex> delete_table(table)
+      iex> delete_table_record(table)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_table(%Table{} = table) do
+  def delete_table_record(%Table{} = table) do
     table
     |> Table.changeset_delete(%{deleted_at: NaiveDateTime.utc_now()})
     |> Repo.update()
@@ -170,11 +177,11 @@ defmodule Dbb.Content do
 
   ## Examples
 
-      iex> change_table(table)
+      iex> change_table_record(table)
       %Ecto.Changeset{data: %Table{}}
 
   """
-  def change_table(%Table{} = table, attrs \\ %{}) do
+  def change_table_record(%Table{} = table, attrs \\ %{}) do
     Table.changeset(table, attrs)
   end
 end

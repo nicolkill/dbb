@@ -17,7 +17,7 @@ defmodule Dbb.ContentFixtures do
         "reference" => "7488a646-e31f-11e4-aace-600308960662"
       })
 
-    {:ok, table} = Dbb.Content.create_table("users", attrs)
+    {:ok, table} = Dbb.Content.create_table_record("users", attrs)
 
     table
   end

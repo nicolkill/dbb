@@ -1,20 +1,70 @@
-<div class="flex gap-1">
+<div class="flex gap-1 pb-4">
+  <div class="flex-none">
+    <.back navigate={DbbWeb.Admin.AdminLive.link(:root)}>
+      Back
+    </.back>
+  </div>
   <div class="grow">
   </div>
   <div class="flex-none">
-    <a class="bg-green-700 text-white px-4 py-1 rounded text-lg" href={link(:create, @schema_name)}>Add</a>
+    <.button_link class="bg-teal-400 hover:bg-teal-700" navigate={DbbWeb.Admin.AdminLive.link(:create, @schema_name)}>
+      Add
+    </.button_link>
   </div>
 </div>
 
-<table class="table-auto">
+<.modal id="confirm-modal">
+  <p>
+    Are you sure to delete this record?.
+  </p>
+  <div class="flex gap-1 pb-4">
+    <div class="grow">
+    </div>
+    <div class="flex-none">
+      <.button
+        phx-click={JS.push("delete-record") |> hide_modal("confirm-modal")}
+        class="bg-red-400 hover:bg-red-700">
+        Delete!
+      </.button>
+      <.button
+        phx-click={hide_modal("confirm-modal")}
+        class="bg-transparent text-black">
+        Cancel
+      </.button>
+    </div>
+  </div>
+</.modal>
+
+<table :if={length(@table_data) > 0} class="table-auto border-separate w-full text-left">
   <thead>
     <tr>
-      <th :for={{field_name, _field_type} <- @schema_fields}><%= String.capitalize(field_name) %></th>
+      <th :for={{field, _type} <- @schema_fields}><%= String.capitalize(field) %></th>
+      <th>Options</th>
     </tr>
   </thead>
   <tbody>
     <tr :for={row <- @table_data}>
-      <td :for={{field_name, _field_type} <- @schema_fields}><%= Map.get(row, field_name) %></td>
+      <td :for={{field, type} <- @schema_fields}>
+        <%= render_field(row, type, field) %>
+      </td>
+      <td>
+        <div class="flex gap-1">
+          <.button_link
+            class="bg-blue-400 hover:bg-blue-700"
+            navigate={DbbWeb.Admin.AdminLive.link(:update, @schema_name, row.id)}>
+            Edit
+          </.button_link>
+          <.button
+            class="bg-red-400 hover:bg-red-700"
+            phx-click={JS.push("delete") |> show_modal("confirm-modal")}
+            phx-value-row-id={row.id}>
+            Delete
+          </.button>
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>
+<.rounded_block :if={length(@table_data) == 0}>
+  Not data
+</.rounded_block>

@@ -202,7 +202,7 @@ defmodule DbbWeb.CoreComponents do
     <.form :let={f} for={@for} as={@as} {@rest}>
       <div class="mt-10 space-y-8 bg-white">
         <%= render_slot(@inner_block, f) %>
-        <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+        <div :for={action <- @actions} class="mt-2 flex items-center gap-2">
           <%= render_slot(action, f) %>
         </div>
       </div>
@@ -219,7 +219,7 @@ defmodule DbbWeb.CoreComponents do
       <.button phx-click="go" class="ml-2">Send!</.button>
   """
   attr :type, :string, default: nil
-  attr :class, :string, default: nil
+  attr :class, :string, default: "bg-teal-400 hover:bg-teal-700"
   attr :rest, :global, include: ~w(disabled form name value)
 
   slot :inner_block, required: true
@@ -229,7 +229,7 @@ defmodule DbbWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded py-1 px-2",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
         @class
       ]}
@@ -557,15 +557,13 @@ defmodule DbbWeb.CoreComponents do
 
   def back(assigns) do
     ~H"""
-    <div class="mt-16">
-      <.link
-        navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-      >
-        <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
-        <%= render_slot(@inner_block) %>
-      </.link>
-    </div>
+    <.link
+      navigate={@navigate}
+      class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+    >
+      <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
+      <%= render_slot(@inner_block) %>
+    </.link>
     """
   end
 
@@ -616,10 +614,10 @@ defmodule DbbWeb.CoreComponents do
     assigns = assign(assigns, :schemas, schemas)
 
     ~H"""
-    <header class="px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+    <header class="">
+      <div class="flex items-center justify-between border-b border-gray-300 py-3 px-8 text-sm">
         <div class="flex items-center gap-4">
-          <span class="font-bold">
+          <span class="font-bold text-lg">
             <%= @title %>
           </span>
         </div>
@@ -630,6 +628,74 @@ defmodule DbbWeb.CoreComponents do
         </div>
       </div>
     </header>
+    """
+  end
+
+  @doc """
+  Renders a button with link.
+
+  ## Examples
+
+    <.button_link href="/some/route" class="bg-gray-200">
+      Add
+    </.button_link>
+
+  """
+  attr :navigate, :any, required: true
+  attr :class, :string, default: "bg-teal-400 hover:bg-teal-700"
+  slot :inner_block, required: true
+
+  def button_link(assigns) do
+    ~H"""
+    <.link class={[
+      "phx-submit-loading:opacity-75 rounded py-1 px-2",
+      "text-sm font-semibold leading-6 text-white active:text-white/80",
+      @class
+    ]} navigate={@navigate}>
+      <%= render_slot(@inner_block) %>
+    </.link>
+    """
+  end
+
+  @doc """
+  Renders a rounded block with content.
+
+  ## Examples
+
+    <.rounded_block class="bg-gray-200">
+      Some text content but can be html
+    </.rounded_block>
+
+  """
+  attr :class, :string, default: "bg-gray-100"
+  slot :inner_block, required: true
+
+  def rounded_block(assigns) do
+    ~H"""
+    <span class={"block w-full p-2 mt-2 rounded #{@class}"}>
+      <%= render_slot(@inner_block) %>
+    </span>
+    """
+  end
+
+  @doc """
+  Renders a checkbox.
+
+  ## Examples
+
+    <.checkbox checked={false} />
+
+  """
+  attr :checked, :boolean, default: true
+
+  def checkbox(assigns) do
+    ~H"""
+    <input
+      class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
+      type="checkbox"
+      {%{checked: @checked}}
+      readonly
+      disabled>
     """
   end
 

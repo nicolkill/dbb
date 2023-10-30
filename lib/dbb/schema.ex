@@ -42,6 +42,44 @@ defmodule Dbb.Schema do
           schemas: [schema()]
         }
 
+  defp default_value("number"), do: 0
+  defp default_value("float"), do: 0.0
+  defp default_value("integer"), do: 0
+  defp default_value("boolean"), do: true
+  defp default_value("time"), do: Time.utc_now()
+  defp default_value("date"), do: Date.utc_today()
+  defp default_value("datetime"), do: NaiveDateTime.utc_now()
+  defp default_value("string"), do: ""
+
+  def field_type_to_input_type("number"), do: "number"
+  def field_type_to_input_type("float"), do: "number"
+  def field_type_to_input_type("integer"), do: "number"
+  def field_type_to_input_type("boolean"), do: "checkbox"
+  def field_type_to_input_type("time"), do: "time"
+  def field_type_to_input_type("date"), do: "date"
+  def field_type_to_input_type("datetime"), do: "datetime-local"
+  def field_type_to_input_type("string"), do: "text"
+
+  def value_to_type("", _), do: ""
+  def value_to_type(value, type) when type in ["number", "float", "integer"] and is_bitstring(value) do
+    String.to_float(value)
+  rescue
+    _ ->
+      String.to_integer(value)
+  end
+  def value_to_type(value, "boolean") when is_bitstring(value), do: value == "true" or value == "1"
+  def value_to_type(value, "time") when is_bitstring(value), do: Time.from_iso8601!(value)
+  def value_to_type(value, "date") when is_bitstring(value), do: Date.from_iso8601!(value)
+  def value_to_type(value, "datetime") when is_bitstring(value) do
+    <<_::80, 84, _::16, 58, _::16>> = value
+    NaiveDateTime.from_iso8601!("#{value}:00")
+  rescue
+    _ ->
+      <<_::80, 84, _::16, 58, _::16, 58, _::16>> = value
+      NaiveDateTime.from_iso8601!(value)
+  end
+  def value_to_type(value, _), do: value
+
   defp file, do: Application.get_env(:dbb, :general_config)[:file]
 
   def load_config() do
@@ -66,5 +104,12 @@ defmodule Dbb.Schema do
       {:ok, cache} -> cache
       _ -> nil
     end
+  end
+
+  @spec schema_default_record(schema()) :: map()
+  def schema_default_record(%{"fields" => fields}) do
+    Enum.reduce(fields, %{}, fn {key, type}, acc ->
+      Map.put(acc, key, default_value(type))
+    end)
   end
 end

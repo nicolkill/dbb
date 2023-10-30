@@ -12,45 +12,45 @@ defmodule DbbWeb.TableController do
     {page, count} = TableHandler.pagination(params)
     query = TableHandler.search(params)
 
-    table = Content.list_table(schema, query, page, count)
+    table_record = Content.list_table_records(schema, query, page, count)
     TableHandler.hooks(:index, schema, params)
-    render(conn, :index, table: table, page: page, count: count)
+    render(conn, :index, table: table_record, page: page, count: count)
   end
 
   def show(conn, params) do
     {schema, id, _} = TableHandler.validate_schema(params)
 
-    table = Content.get_table!(schema, id)
-    TableHandler.hooks(:show, schema, params, table)
-    render(conn, :show, table: table)
+    table_record = Content.get_table_record!(schema, id)
+    TableHandler.hooks(:show, schema, params, table_record)
+    render(conn, :show, table: table_record)
   end
 
   def create(conn, params) do
     with {schema, _, {:ok, data}} <- TableHandler.validate_schema(params),
-         {:ok, %Table{} = table} <- Content.create_table(schema, data) do
-      TableHandler.hooks(:create, schema, params, table)
+         {:ok, %Table{} = table_record} <- Content.create_table_record(schema, data) do
+      TableHandler.hooks(:create, schema, params, table_record)
 
       conn
       |> put_status(201)
-      |> render(:show, table: table)
+      |> render(:show, table: table_record)
     end
   end
 
   def update(conn, params) do
     with {schema, id, {:ok, data}} <- TableHandler.validate_schema(params),
-         table <- Content.get_table!(schema, id),
-         {:ok, %Table{} = table} <- Content.update_table(table, data) do
-      TableHandler.hooks(:update, schema, params, table)
-      render(conn, :show, table: table)
+         table_record <- Content.get_table_record!(schema, id),
+         {:ok, %Table{} = table_record} <- Content.update_table_record(table_record, data) do
+      TableHandler.hooks(:update, schema, params, table_record)
+      render(conn, :show, table: table_record)
     end
   end
 
   def delete(conn, params) do
     {schema, id, _} = TableHandler.validate_schema(params)
-    table = Content.get_table!(schema, id)
+    table_record = Content.get_table_record!(schema, id)
 
-    with {:ok, %Table{}} <- Content.delete_table(table) do
-      TableHandler.hooks(:delete, schema, params, table)
+    with {:ok, %Table{}} <- Content.delete_table_record(table_record) do
+      TableHandler.hooks(:delete, schema, params, table_record)
       send_resp(conn, :no_content, "")
     end
   end
