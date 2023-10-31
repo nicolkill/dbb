@@ -2,7 +2,7 @@
 
 <.rounded_block class="bg-gray-100">
   <ul class="list-none list-inside">
-    <li :for={schema <- @schemas} >
+    <li :for={schema <- @schemas}>
       <a href={"/#{schema}"} class="rounded px-2 bg-gray-200 hover:bg-gray-300">
         <%= String.capitalize(schema) %>
       </a>

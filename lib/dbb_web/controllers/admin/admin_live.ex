@@ -11,12 +11,14 @@ defmodule DbbWeb.Admin.AdminLive do
   end
 
   def link(:root),
-      do: "/"
+    do: "/"
+
   def link(:index, schema_name),
-      do: "/#{schema_name}"
+    do: "/#{schema_name}"
+
   def link(:create, schema_name),
-      do: "/#{schema_name}/create"
+    do: "/#{schema_name}/create"
+
   def link(:update, schema_name, id),
-      do: "/#{schema_name}/update/#{id}"
-  
+    do: "/#{schema_name}/update/#{id}"
 end

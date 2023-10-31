@@ -61,15 +61,21 @@ defmodule Dbb.Schema do
   def field_type_to_input_type("string"), do: "text"
 
   def value_to_type("", _), do: ""
-  def value_to_type(value, type) when type in ["number", "float", "integer"] and is_bitstring(value) do
+
+  def value_to_type(value, type)
+      when type in ["number", "float", "integer"] and is_bitstring(value) do
     String.to_float(value)
   rescue
     _ ->
       String.to_integer(value)
   end
-  def value_to_type(value, "boolean") when is_bitstring(value), do: value == "true" or value == "1"
+
+  def value_to_type(value, "boolean") when is_bitstring(value),
+    do: value == "true" or value == "1"
+
   def value_to_type(value, "time") when is_bitstring(value), do: Time.from_iso8601!(value)
   def value_to_type(value, "date") when is_bitstring(value), do: Date.from_iso8601!(value)
+
   def value_to_type(value, "datetime") when is_bitstring(value) do
     <<_::80, 84, _::16, 58, _::16>> = value
     NaiveDateTime.from_iso8601!("#{value}:00")
@@ -78,6 +84,7 @@ defmodule Dbb.Schema do
       <<_::80, 84, _::16, 58, _::16, 58, _::16>> = value
       NaiveDateTime.from_iso8601!(value)
   end
+
   def value_to_type(value, _), do: value
 
   defp file, do: Application.get_env(:dbb, :general_config)[:file]

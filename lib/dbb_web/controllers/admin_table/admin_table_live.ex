@@ -31,9 +31,10 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
   end
 
   defp get_assign(socket, key),
-       do: socket
-           |> Map.get(:assigns)
-           |> Map.get(key)
+    do:
+      socket
+      |> Map.get(:assigns)
+      |> Map.get(key)
 
   def render_field(row, type, field) do
     value =
@@ -44,6 +45,7 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
     case type do
       "boolean" ->
         checkbox(%{checked: value})
+
       _ ->
         value
     end
@@ -54,7 +56,7 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
   end
 
   def handle_event("delete-record", _, socket) do
-#    schema_name = get_assign(socket, :schema_name)
+    #    schema_name = get_assign(socket, :schema_name)
     to_delete_id = get_assign(socket, :to_delete)
 
     {table_data, table_record} =
@@ -63,13 +65,14 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
       |> Enum.reduce({[], []}, fn
         %Table{id: id} = record, {data, _} when id == to_delete_id ->
           {data, record}
+
         record, {data, founded} ->
           {data ++ [record], founded}
       end)
 
     {:ok, %Table{}} = Content.delete_table_record(table_record)
 
-#    TableHandler.hooks(:delete, schema_name, %{}, table_record)
+    #    TableHandler.hooks(:delete, schema_name, %{}, table_record)
 
     socket =
       socket
@@ -78,5 +81,4 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
 
     {:noreply, socket}
   end
-
 end

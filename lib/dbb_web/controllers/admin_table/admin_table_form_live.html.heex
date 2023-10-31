@@ -9,7 +9,8 @@
           field={Access.get(@form, String.to_atom(field))}
           type={Dbb.Schema.field_type_to_input_type(type)}
           label={String.capitalize(field)}
-          phx-debounce="500"/>
+          phx-debounce="500"
+        />
       </div>
     </div>
     <:actions>

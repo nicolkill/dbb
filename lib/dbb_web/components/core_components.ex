@@ -594,7 +594,6 @@ defmodule DbbWeb.CoreComponents do
     """
   end
 
-
   @doc """
   Renders a navbar with all the defined schemas.
 
@@ -622,7 +621,11 @@ defmodule DbbWeb.CoreComponents do
           </span>
         </div>
         <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-          <a :for={schema <- @schemas} href={"/#{schema}"} class="rounded px-2 text-white bg-gray-500 hover:bg-gray-900">
+          <a
+            :for={schema <- @schemas}
+            href={"/#{schema}"}
+            class="rounded px-2 text-white bg-gray-500 hover:bg-gray-900"
+          >
             <%= String.capitalize(schema) %>
           </a>
         </div>
@@ -655,7 +658,8 @@ defmodule DbbWeb.CoreComponents do
         @class
       ]}
       navigate={@navigate}
-      {@rest}>
+      {@rest}
+    >
       <%= render_slot(@inner_block) %>
     </.link>
     """
@@ -699,7 +703,8 @@ defmodule DbbWeb.CoreComponents do
       type="checkbox"
       {%{checked: @checked}}
       readonly
-      disabled>
+      disabled
+    />
     """
   end
 

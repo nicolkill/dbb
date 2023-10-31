@@ -34,6 +34,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
 
   def mount(params, _session, socket) do
     {schema_name, _, _} = TableHandler.validate_schema(params)
+
     schema =
       Schema.get_config()
       |> Map.get("schemas")
@@ -48,6 +49,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
 
     {:ok, socket}
   end
+
   def handle_event("save", _, socket) do
     record = get_assign(socket, :record)
     action = get_assign(socket, :action)
@@ -57,6 +59,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
       case action do
         @action_create ->
           {:create_table_record, [schema_name, record]}
+
         @action_update ->
           db_record = get_assign(socket, :db_record)
           {:update_table_record, [db_record, record]}
@@ -64,9 +67,9 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
 
     {:ok, %Table{id: id}} = apply(Content, func, args)
 
-#    action
-#    |> String.to_atom()
-#    |> TableHandler.hooks(schema_name, %{}, record)
+    #    action
+    #    |> String.to_atom()
+    #    |> TableHandler.hooks(schema_name, %{}, record)
 
     socket =
       socket
@@ -78,10 +81,12 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
 
   def handle_event("validate", %{"_target" => [field]} = params, socket) do
     schema_fields = get_assign(socket, :schema_fields)
+
     value =
       params
       |> Map.get(field)
       |> Schema.value_to_type(Map.get(schema_fields, field))
+
     record =
       socket
       |> get_assign(:record)
@@ -90,18 +95,21 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
     errors =
       record
       |> get_invalid_fields(schema_fields)
-      |> Enum.map(&({String.to_atom(&1), {@field_error_message, []}}))
+      |> Enum.map(&{String.to_atom(&1), {@field_error_message, []}})
 
     socket =
       socket
       |> assign(:record, record)
       |> assign(:form, to_form(record, errors: errors))
+
     {:noreply, socket}
   end
 
-  defp get_assign(socket, key), do: socket
-                           |> Map.get(:assigns)
-                           |> Map.get(key)
+  defp get_assign(socket, key),
+    do:
+      socket
+      |> Map.get(:assigns)
+      |> Map.get(key)
 
   defp get_invalid_fields(record, schema_fields) do
     result =
@@ -115,6 +123,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
         |> String.replace("error at: ", "")
         |> String.replace(" -> ", ",")
         |> String.split(",")
+
       _ ->
         []
     end

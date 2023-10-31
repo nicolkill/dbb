@@ -4,10 +4,12 @@
       Back
     </.back>
   </div>
-  <div class="grow">
-  </div>
+  <div class="grow"></div>
   <div class="flex-none">
-    <.button_link class="bg-teal-400 hover:bg-teal-700" navigate={DbbWeb.Admin.AdminLive.link(:create, @schema_name)}>
+    <.button_link
+      class="bg-teal-400 hover:bg-teal-700"
+      navigate={DbbWeb.Admin.AdminLive.link(:create, @schema_name)}
+    >
       Add
     </.button_link>
   </div>
@@ -18,17 +20,15 @@
     Are you sure to delete this record?.
   </p>
   <div class="flex gap-1 pb-4">
-    <div class="grow">
-    </div>
+    <div class="grow"></div>
     <div class="flex-none">
       <.button
         phx-click={JS.push("delete-record") |> hide_modal("confirm-modal")}
-        class="bg-red-400 hover:bg-red-700">
+        class="bg-red-400 hover:bg-red-700"
+      >
         Delete!
       </.button>
-      <.button
-        phx-click={hide_modal("confirm-modal")}
-        class="bg-transparent text-black">
+      <.button phx-click={hide_modal("confirm-modal")} class="bg-transparent text-black">
         Cancel
       </.button>
     </div>
@@ -52,14 +52,16 @@
           <.button_link
             id={"edit_#{row.id}_button"}
             class="bg-blue-400 hover:bg-blue-700"
-            navigate={DbbWeb.Admin.AdminLive.link(:update, @schema_name, row.id)}>
+            navigate={DbbWeb.Admin.AdminLive.link(:update, @schema_name, row.id)}
+          >
             Edit
           </.button_link>
           <.button
             id={"delete_#{row.id}_button"}
             class="bg-red-400 hover:bg-red-700"
             phx-click={JS.push("delete") |> show_modal("confirm-modal")}
-            phx-value-row-id={row.id}>
+            phx-value-row-id={row.id}
+          >
             Delete
           </.button>
         </div>

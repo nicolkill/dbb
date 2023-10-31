@@ -5,7 +5,6 @@ defmodule DbbWeb.Page.PageControllerTest do
   import Dbb.ContentFixtures
 
   describe "GET /users" do
-
     test "show empty state screen", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/users")
 
@@ -23,19 +22,19 @@ defmodule DbbWeb.Page.PageControllerTest do
       assert render(view) =~ user.data["name"]
     end
 
-#    test "handles delete on UI", %{conn: conn} do
-#      %{users: [user | _rest]} = create_users(nil)
-#      {:ok, view, _html} = live(conn, ~p"/users")
-#
-#      view
-#      |> element("table.table-auto.w-full tbody tr button#delete_#{user.id}_button")
-#      |> render_click()
-#
-#      delete_params = %{"row-id" => user.id}
-#      assert_push_event view, "delete", delete_params
-#
-#      assert render_async(view) =~ "asdf"
-#    end
+    #    test "handles delete on UI", %{conn: conn} do
+    #      %{users: [user | _rest]} = create_users(nil)
+    #      {:ok, view, _html} = live(conn, ~p"/users")
+    #
+    #      view
+    #      |> element("table.table-auto.w-full tbody tr button#delete_#{user.id}_button")
+    #      |> render_click()
+    #
+    #      delete_params = %{"row-id" => user.id}
+    #      assert_push_event view, "delete", delete_params
+    #
+    #      assert render_async(view) =~ "asdf"
+    #    end
 
     test "handles edit redirect", %{conn: conn} do
       %{users: [user | _rest]} = create_users(nil)
