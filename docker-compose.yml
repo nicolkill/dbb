@@ -11,7 +11,7 @@ services:
     environment:
       PORT: 4000
       ALLOWED_SITES: "*"
-      CONFIG_SCHEMA: config.json
+      CONFIG_SCHEMA: prod_test.json
 
       # db config
       POSTGRES_USERNAME: postgres
@@ -29,10 +29,11 @@ services:
 #      - ./prod_test.json:/app/prod_test.json
 #    environment:
 #      PORT: 443
-#      ALLOWED_SITES: "*"
-#      CONFIG_SCHEMA: prod_test.json
+#      PHX_HOST: "localhost"
+#      ALLOWED_SITES: "http://localhost:4001"
+#      CONFIG_SCHEMA: /app/prod_test.json
 #      PHX_SERVER: true
-#      SECRET_KEY_BASE: example_SECRET_KEY_BASE
+#      SECRET_KEY_BASE: h9vi/wp7YsM9OCUEKXJE9k8ieTSQesM/hHZi6jZil7xlLJbFmXuU6GwdNOa2rqW5
 #
 #      # db config
 #      POSTGRES_USERNAME: postgres

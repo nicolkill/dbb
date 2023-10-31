@@ -11,7 +11,6 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
     query = TableHandler.search(params)
 
     table_data = Content.list_table_records(schema_name, query, page, count)
-      |> IO.inspect(label: "############ table_data")
 
     schema =
       Dbb.Schema.get_config()
@@ -55,7 +54,7 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
   end
 
   def handle_event("delete-record", _, socket) do
-    schema_name = get_assign(socket, :schema_name)
+#    schema_name = get_assign(socket, :schema_name)
     to_delete_id = get_assign(socket, :to_delete)
 
     {table_data, table_record} =

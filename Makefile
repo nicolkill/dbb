@@ -21,13 +21,13 @@ image:
 	docker tag ${IMAGE_TAG_DEV}:${REVISION} ${IMAGE_TAG_DEV}:latest
 
 testing:
-	docker compose run --rm -e "MIX_ENV=test" app mix test
+	docker compose exec app sh -c 'MIX_ENV=test mix test'
 
 iex:
 	docker compose exec app iex -S mix
 
 bash:
-	docker compose run --rm app sh
+	docker compose exec app sh
 
 routes:
 	docker compose exec app mix phx.routes

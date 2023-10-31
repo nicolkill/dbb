@@ -28,9 +28,10 @@ RUN mix phx.digest
 
 # compile and build release
 COPY lib lib
+COPY assets assets
 # uncomment COPY if rel/ exists
 # COPY rel rel
-RUN mix do compile, release
+RUN mix do compile, assets.build, assets.deploy, release
 
 FROM alpine:3.17.0 AS app
 RUN apk add --no-cache \

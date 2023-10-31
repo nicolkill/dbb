@@ -180,9 +180,9 @@ defmodule DbbWeb.TableControllerTest do
   end
 
   defp create_users(_) do
-    user1 = users_fixture(%{name: "jhon", age: 20})
-    user2 = users_fixture(%{name: "jim", age: 22})
-    user3 = users_fixture(%{name: "mike"})
+    user1 = users_fixture(%{"name" => "jhon", "age" => 20})
+    user2 = users_fixture(%{"name" => "jim", "age" => 22})
+    user3 = users_fixture(%{"name" => "mike"})
 
     %{users: [user1, user2, user3]}
   end

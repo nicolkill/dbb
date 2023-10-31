@@ -220,7 +220,7 @@ defmodule DbbWeb.CoreComponents do
   """
   attr :type, :string, default: nil
   attr :class, :string, default: "bg-teal-400 hover:bg-teal-700"
-  attr :rest, :global, include: ~w(disabled form name value)
+  attr :rest, :global, include: ~w(id disabled form name value)
 
   slot :inner_block, required: true
 
@@ -644,14 +644,18 @@ defmodule DbbWeb.CoreComponents do
   attr :navigate, :any, required: true
   attr :class, :string, default: "bg-teal-400 hover:bg-teal-700"
   slot :inner_block, required: true
+  attr :rest, :global, include: ~w(id disabled form name value)
 
   def button_link(assigns) do
     ~H"""
-    <.link class={[
-      "phx-submit-loading:opacity-75 rounded py-1 px-2",
-      "text-sm font-semibold leading-6 text-white active:text-white/80",
-      @class
-    ]} navigate={@navigate}>
+    <.link
+      class={[
+        "phx-submit-loading:opacity-75 rounded py-1 px-2",
+        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        @class
+      ]}
+      navigate={@navigate}
+      {@rest}>
       <%= render_slot(@inner_block) %>
     </.link>
     """

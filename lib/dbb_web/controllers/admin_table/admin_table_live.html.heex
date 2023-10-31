@@ -43,18 +43,20 @@
     </tr>
   </thead>
   <tbody>
-    <tr :for={row <- @table_data}>
-      <td :for={{field, type} <- @schema_fields}>
+    <tr :for={row <- @table_data} id={"#{@schema_name}_row_#{row.id}"}>
+      <td :for={{field, type} <- @schema_fields} id={"field_#{field}_#{row.id}"}>
         <%= render_field(row, type, field) %>
       </td>
-      <td>
+      <td id={"field_options_#{row.id}"}>
         <div class="flex gap-1">
           <.button_link
+            id={"edit_#{row.id}_button"}
             class="bg-blue-400 hover:bg-blue-700"
             navigate={DbbWeb.Admin.AdminLive.link(:update, @schema_name, row.id)}>
             Edit
           </.button_link>
           <.button
+            id={"delete_#{row.id}_button"}
             class="bg-red-400 hover:bg-red-700"
             phx-click={JS.push("delete") |> show_modal("confirm-modal")}
             phx-value-row-id={row.id}>

@@ -20,6 +20,18 @@ if System.get_env("PHX_SERVER") do
   config :dbb, DbbWeb.Endpoint, server: true
 end
 
+# cors config
+allowed_sites =
+  System.get_env("ALLOWED_SITES", "*")
+    |> String.split(",")
+
+config :cors_plug,
+  origin: allowed_sites
+
+config :dbb, :general_config,
+  file: System.get_env("CONFIG_SCHEMA"),
+  api_key: System.get_env("ALLOWED_API_KEY")
+
 if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
@@ -59,7 +71,8 @@ if config_env() == :prod do
 #      ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
-    secret_key_base: secret_key_base
+    secret_key_base: secret_key_base,
+    check_origin: allowed_sites
 
   # ## SSL Support
   #
