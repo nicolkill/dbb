@@ -244,20 +244,33 @@ services:
 
 The schema config exists on his own file, but the server it's configured by env vars, so here the list
 
-```
-# server config
-PORT: 4000
-PHX_HOST: your_domain.com
-ALLOWED_SITES: "*" # cors stuff
-ALLOWED_API_KEY: "976ba520-7ea4-45cb-9e17-e7c5d922cfb2"
-CONFIG_SCHEMA: config.json
+#### Mandatory
 
-# db config
-POSTGRES_USERNAME: postgres
-POSTGRES_PASSWORD: postgres
-POSTGRES_DATABASE: postgres
-POSTGRES_HOSTNAME: postgres
-```
+| Env var | Value | Default | Description |
+|---|---|---|---|
+| CONFIG_SCHEMA* | string | | Your definition schema file name |
+| POSTGRES_USERNAME | string | postgres | PostgreSQL username |
+| POSTGRES_PASSWORD | string | postgres | PostgreSQL password |
+| POSTGRES_DATABASE | string | postgres | PostgreSQL database name |
+| POSTGRES_HOSTNAME | string | postgres | PostgreSQL hostname, in docker-compose config must be the name of the container |
+
+#### Mandatory on prod
+
+| Env var | Value | Default | Description |
+|---|---|---|---|
+| ALLOWED_SITES | string | http://localhost:4000 | Cors allowed sites |
+| PHX_SERVER | boolean | | Tells to Phoenix that must be a http-server, otherwise the server wouldn't serve the routes |
+| PHX_HOST | string | example.com | Domain name |
+
+#### Optional
+
+| Env var | Value | Default | Description |
+|---|---|---|---|
+| PORT | integer | 4000 | Port number, just for dev |
+| ALLOWED_API_KEY | string | Static API Key to secure calls on API CRUD |
+
+> In case that prod deployment, the port it's `443` (https) and the port it's for standart calls, but this will be
+redirected
 
 ## Roadmap
 
@@ -293,5 +306,15 @@ POSTGRES_HOSTNAME: postgres
     - [x] Not exist the field
     - [x] Multiple query fields
     - [ ] Related fields aggregation
-- [ ] Admin panel (CRUD)
-    - [ ] Panel type of view's from config file
+- [x] Admin panel (CRUD) by config
+    - [ ] Show all schemas and details
+    - [x] List of available schemas
+    - [x] List the data from schema
+        - [ ] Scroll to load more data
+    - [x] Create new record
+        - [ ] Call hook on action
+    - [x] Update record
+        - [ ] Call hook on action
+    - [x] Delete record (soft delete)
+        - [ ] Force delete
+        - [ ] Call hook on action
