@@ -6,6 +6,7 @@ defmodule Dbb.Schema do
   alias Dbb.Cache
 
   @schema_format %{
+    ui_title?: :string,
     schemas: [
       %{
         name: :string,

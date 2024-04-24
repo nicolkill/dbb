@@ -1,11 +1,11 @@
 <h1 class="text-xl font-bold">Available tables</h1>
 
-<.rounded_block class="bg-gray-100">
-  <ul class="list-none list-inside">
-    <li :for={schema <- @schemas}>
-      <a href={"/#{schema}"} class="rounded px-2 bg-gray-200 hover:bg-gray-300">
-        <%= String.capitalize(schema) %>
-      </a>
-    </li>
-  </ul>
+<.rounded_block class="bg-gray-100 p-4">
+  <div class="flex gap-4">
+    <div :for={schema <- @schemas}>
+      <.button_link navigate={"/#{schema}"} class="bg-gray-300 hover:bg-gray-400">
+        <%= Utils.capitalize_snake_case(schema) %>
+      </.button_link>
+    </div>
+  </div>
 </.rounded_block>

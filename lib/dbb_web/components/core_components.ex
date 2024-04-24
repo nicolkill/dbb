@@ -603,31 +603,30 @@ defmodule DbbWeb.CoreComponents do
 
   """
   attr :title, :string, required: true
+  attr :menu_elements, :list, required: true
 
   def navbar(assigns) do
-    schemas =
-      Dbb.Schema.get_config()
-      |> Map.get("schemas")
-      |> Enum.map(&Map.get(&1, "name"))
-
-    assigns = assign(assigns, :schemas, schemas)
-
     ~H"""
     <header class="">
-      <div class="flex items-center justify-between border-b border-gray-300 py-3 px-8 text-sm">
-        <div class="flex items-center gap-4">
-          <span class="font-bold text-lg">
-            <%= @title %>
-          </span>
-        </div>
-        <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-          <a
-            :for={schema <- @schemas}
-            href={"/#{schema}"}
-            class="rounded px-2 text-white bg-gray-500 hover:bg-gray-900"
-          >
-            <%= String.capitalize(schema) %>
-          </a>
+      <div class="border-b border-gray-300 py-3 px-8 text-sm">
+        <div class="mx-auto max-w-4xl flex items-center justify-between ">
+          <div class="flex items-center gap-4">
+            <span class="font-bold text-lg">
+              <%= @title %>
+            </span>
+          </div>
+          <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
+            <a
+              :for={element <- @menu_elements}
+              href={element.url}
+              class={[
+                "rounded px-2 text-white bg-gray-500 hover:bg-gray-900",
+                Map.get(element, :class, "")
+              ]}
+            >
+              <%= Utils.capitalize_snake_case(element.text) %>
+            </a>
+          </div>
         </div>
       </div>
     </header>
@@ -653,7 +652,7 @@ defmodule DbbWeb.CoreComponents do
     ~H"""
     <.link
       class={[
-        "phx-submit-loading:opacity-75 rounded py-1 px-2",
+        "phx-submit-loading:opacity-75 rounded py-2 px-4",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
         @class
       ]}

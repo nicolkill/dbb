@@ -19,7 +19,11 @@ defmodule Dbb.TableHandler do
             Enum.reduce(
               schema_fields,
               %{},
-              &Map.put(&2, String.to_atom("#{elem(&1, 0)}?"), String.to_atom(elem(&1, 1)))
+              fn {key, type}, acc ->
+                type = String.to_atom(type)
+                key = String.to_atom("#{key}?")
+                Map.put(acc, key, type)
+              end
             )
 
           {:ok, nil} == MapSchemaValidator.validate(schema_fields, data)
@@ -28,7 +32,12 @@ defmodule Dbb.TableHandler do
           false
       end
 
-    if is_valid?, do: {:ok, general_data}, else: {:error, nil}
+    if is_valid? do
+      schema_fields_keys = Map.keys(schema_fields)
+      {:ok, Map.take(general_data, schema_fields_keys)}
+    else
+      {:error, nil}
+    end
   end
 
   def validate_schema(%{"schema" => schema} = params) do

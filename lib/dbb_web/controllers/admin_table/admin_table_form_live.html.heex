@@ -1,6 +1,6 @@
 <div :if={is_nil(assigns[:not_found])}>
   <.rounded_block class="bg-gray-100 text-2xl">
-    <%= "#{String.capitalize(@action)} #{String.capitalize(@schema_name)} record" %>
+    <%= "#{String.capitalize(@action)} #{Utils.capitalize_snake_case(@schema_name)} record" %>
   </.rounded_block>
   <.simple_form for={@form} phx-change="validate" phx-submit="save">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -8,7 +8,7 @@
         <.input
           field={Access.get(@form, String.to_atom(field))}
           type={Dbb.Schema.field_type_to_input_type(type)}
-          label={String.capitalize(field)}
+          label={Utils.capitalize_snake_case(field)}
           phx-debounce="500"
         />
       </div>

@@ -1,4 +1,13 @@
-<.navbar title="dbb" />
+<.navbar
+  title={Utils.title()}
+  menu_elements={[
+    %{
+      text: "SwaggerUI",
+      url: "/api_docs/v1",
+      class: "bg-green-400 hover:bg-green-600"
+    }
+  ] ++ Utils.schemas_menu_list()}
+/>
 <main class="px-4 py-20 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-4xl">
     <.flash_group flash={@flash} />

@@ -38,7 +38,7 @@
 <table :if={length(@table_data) > 0} class="table-auto border-separate w-full text-left">
   <thead>
     <tr>
-      <th :for={{field, _type} <- @schema_fields}><%= String.capitalize(field) %></th>
+      <th :for={{field, _type} <- @schema_fields}><%= Utils.capitalize_snake_case(field) %></th>
       <th>Options</th>
     </tr>
   </thead>

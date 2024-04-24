@@ -24,7 +24,7 @@ defmodule Dbb.Swagger do
   defp swg_properties("integer"), do: %{"type" => "integer"}
   defp swg_properties("boolean"), do: %{"type" => "boolean"}
 
-  defp cap_name(schema), do: String.capitalize(schema["name"])
+  defp cap_name(schema), do: Utils.modularize_snake_case(schema["name"])
 
   defp swg_parameter_path_id(schema) do
     %{

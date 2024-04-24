@@ -38,6 +38,7 @@ just for prototypes or small/medium projects
 
 ```
 {
+  "ui_title": "some system title",
   "schemas": [
     {
       "name": "users",
@@ -307,6 +308,7 @@ redirected
     - [x] Multiple query fields
     - [ ] Related fields aggregation
 - [x] Admin panel (CRUD) by config
+    - [x] Custom title for UI
     - [ ] Show all schemas and details
     - [x] List of available schemas
     - [x] List the data from schema

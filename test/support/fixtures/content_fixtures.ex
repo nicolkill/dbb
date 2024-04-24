@@ -12,7 +12,10 @@ defmodule Dbb.ContentFixtures do
       Enum.into(attrs, %{
         "data" => %{
           "name" => "some_name",
-          "age" => 20
+          "age" => 20,
+          "male" => true,
+          "birth" => "2024-04-24 00:00:00",
+          "flags" => ["super-flag"]
         },
         "reference" => "7488a646-e31f-11e4-aace-600308960662"
       })

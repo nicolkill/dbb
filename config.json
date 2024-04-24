@@ -1,4 +1,5 @@
 {
+  "ui_title": "some example title",
   "schemas": [
     {
       "name": "users",
@@ -6,7 +7,8 @@
         "name": "string",
         "age": "number",
         "male": "boolean",
-        "birth": "datetime"
+        "birth": "datetime",
+        "flags": "array"
       },
       "hooks": [
         {
