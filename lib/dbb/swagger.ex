@@ -12,6 +12,7 @@ defmodule Dbb.Swagger do
   defp value_example("datetime"), do: "2023-09-05 00:00:00"
   defp value_example("string"), do: "some string value"
   defp value_example("uuid"), do: "3f0a4ef1-45e1-4cf3-8187-f7c7ec000fa0"
+  defp value_example(data) when is_list(data), do: data |> Enum.map(&value_example/1)
 
   defp swg_properties(value) when value in ["number", "float"], do: %{"type" => "number"}
   defp swg_properties("string"), do: %{"type" => "string"}
@@ -23,6 +24,7 @@ defmodule Dbb.Swagger do
   defp swg_properties("datetime"), do: %{"type" => "string", "format" => "date-time"}
   defp swg_properties("integer"), do: %{"type" => "integer"}
   defp swg_properties("boolean"), do: %{"type" => "boolean"}
+  defp swg_properties(data) when is_list(data), do: %{"type" => "array"}
 
   defp cap_name(schema), do: Utils.modularize_snake_case(schema["name"])
 

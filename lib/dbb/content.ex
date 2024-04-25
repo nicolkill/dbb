@@ -144,10 +144,17 @@ defmodule Dbb.Content do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_table_record(%Table{} = table, attrs) do
+  def update_table_record(%Table{data: data} = table, attrs) do
     data_key = if is_atom_key(attrs), do: :data, else: "data"
 
-    attrs = Map.put(%{}, data_key, attrs)
+    attrs =
+      case attrs do
+        nil ->
+          attrs
+        attrs ->
+          Map.merge(data, attrs)
+      end
+      |> then(&Map.put(%{}, data_key, &1))
 
     table
     |> Table.changeset(attrs)

@@ -37,8 +37,9 @@ defmodule Dbb.ContentTest do
 
       update_attrs = %{}
 
-      assert {:ok, %Table{} = user} = Content.update_table_record(user, update_attrs)
-      assert user.data == %{}
+      assert {:ok, %Table{} = new_user} = Content.update_table_record(user, update_attrs)
+
+      assert new_user.data == user.data
     end
 
     test "update_table/2 with invalid data returns error changeset" do

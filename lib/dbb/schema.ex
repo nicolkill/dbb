@@ -51,6 +51,7 @@ defmodule Dbb.Schema do
   defp default_value("date"), do: Date.utc_today()
   defp default_value("datetime"), do: NaiveDateTime.utc_now()
   defp default_value("string"), do: ""
+  defp default_value(data) when is_list(data), do: data |> Enum.map(&default_value/1)
 
   def field_type_to_input_type("number"), do: "number"
   def field_type_to_input_type("float"), do: "number"
@@ -60,6 +61,7 @@ defmodule Dbb.Schema do
   def field_type_to_input_type("date"), do: "date"
   def field_type_to_input_type("datetime"), do: "datetime-local"
   def field_type_to_input_type("string"), do: "text"
+  def field_type_to_input_type(data) when is_list(data), do: "text"
 
   def value_to_type("", _), do: ""
 

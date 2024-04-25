@@ -8,6 +8,9 @@ defmodule Dbb.TableHandler do
       |> Map.get("schemas")
       |> Enum.find(&(Map.get(&1, "name") == schema_name))
 
+  def type_transform(types) when is_list(types), do: Enum.map(types, &type_transform/1)
+  def type_transform(type), do: String.to_atom(type)
+
   defp extract_data(schema_config, params) do
     schema_fields = Map.get(schema_config, "fields")
     general_data = Map.get(params, "data", nil)
@@ -20,7 +23,7 @@ defmodule Dbb.TableHandler do
               schema_fields,
               %{},
               fn {key, type}, acc ->
-                type = String.to_atom(type)
+                type = type_transform(type)
                 key = String.to_atom("#{key}?")
                 Map.put(acc, key, type)
               end

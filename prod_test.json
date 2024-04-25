@@ -23,7 +23,8 @@
         "last_name": "string",
         "age": "number",
         "male": "boolean",
-        "birth": "datetime"
+        "birth": "datetime",
+        "flags": ["string"]
       }
     },
     {

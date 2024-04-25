@@ -10,13 +10,18 @@ defmodule DbbWeb.TableControllerTest do
     age: 20,
     male: true,
     name: "Pancracio",
-    birth: "2023-05-02 00:00:00"
+    birth: "2023-05-02 00:00:00",
+    flags: ["flag-1", "flag-2"]
   }
   @update_attrs %{
     male: true,
-    name: "Pancracio Jr"
+    name: "Pancracio Jr",
+    flags: ["flag-3"]
   }
-  @invalid_attrs nil
+  @invalid_attrs %{
+    male: 20,
+    flags: [false]
+  }
 
   setup %{conn: conn} do
     Schema.load_config()
@@ -106,6 +111,7 @@ defmodule DbbWeb.TableControllerTest do
       end)
 
       conn = post(conn, ~p"/api/v1/users", data: @create_attrs)
+
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/v1/users/#{id}")
@@ -116,7 +122,8 @@ defmodule DbbWeb.TableControllerTest do
                  "age" => 20,
                  "birth" => "2023-05-02 00:00:00",
                  "male" => true,
-                 "name" => "Pancracio"
+                 "name" => "Pancracio",
+                 "flags" => ["flag-1", "flag-2"]
                },
                "reference" => nil,
                "schema" => "users"
@@ -151,7 +158,8 @@ defmodule DbbWeb.TableControllerTest do
                "id" => ^id,
                "data" => %{
                  "male" => true,
-                 "name" => "Pancracio Jr"
+                 "name" => "Pancracio Jr",
+                 "flags" => ["flag-3"]
                },
                "reference" => nil,
                "schema" => "users"
@@ -161,6 +169,7 @@ defmodule DbbWeb.TableControllerTest do
     test "renders errors when data is invalid", %{conn: conn, users: users} do
       user = Enum.at(users, 0)
       conn = put(conn, ~p"/api/v1/users/#{user}", data: @invalid_attrs)
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

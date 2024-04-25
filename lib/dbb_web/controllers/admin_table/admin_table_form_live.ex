@@ -51,7 +51,12 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
   end
 
   def handle_event("save", _, socket) do
-    record = get_assign(socket, :record)
+    schema_fields = get_assign(socket, :schema_fields)
+    record =
+      socket
+      |> get_assign(:record)
+      |> transform_record_values(schema_fields)
+
     action = get_assign(socket, :action)
     schema_name = get_assign(socket, :schema_name)
 
@@ -65,7 +70,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
           {:update_table_record, [db_record, record]}
       end
 
-    {:ok, %Table{id: id}} = apply(Content, func, args)
+    {:ok, %Table{id: id} = record} = apply(Content, func, args)
 
     #    action
     #    |> String.to_atom()
@@ -112,9 +117,10 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
       |> Map.get(key)
 
   defp get_invalid_fields(record, schema_fields) do
+    record = transform_record_values(record, schema_fields)
     result =
       schema_fields
-      |> Enum.reduce(%{}, &Map.put(&2, String.to_atom(elem(&1, 0)), String.to_atom(elem(&1, 1))))
+      |> transform_schema_fields_to_optional()
       |> MapSchemaValidator.validate(record)
 
     case result do
@@ -137,5 +143,33 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
     |> assign(:record, record)
     |> assign(:db_record, db_record)
     |> assign(:form, to_form(record))
+  end
+
+  defp transform_schema_fields_to_optional(schema_fields) do
+    Enum.reduce(schema_fields, %{}, fn {key, type}, acc ->
+      key = String.to_atom("#{key}?")
+      type = TableHandler.type_transform(type)
+      Map.put(acc, key, type)
+    end)
+  end
+
+  defp tuple_list_to_map(list) do
+    Enum.reduce(list, %{}, &Map.put(&2, elem(&1, 0), elem(&1, 1)))
+  end
+
+  defp transform_record_values(record, schema_fields) do
+    list_fields =
+      schema_fields
+      |> Enum.filter(&is_list(elem(&1, 1)))
+      |> tuple_list_to_map()
+    list_records =
+      record
+      |> Map.take(Map.keys(list_fields))
+      |> Enum.map(fn {k, v} ->
+        {k, v |> String.split(",") |> Enum.map(&String.trim/1)}
+      end)
+      |> tuple_list_to_map()
+
+    Map.merge(record, list_records)
   end
 end
