@@ -7,7 +7,9 @@
 
 - [General description](#general-description)
     - [`config.json` file example](#configjson-file-example)
-- [Usage](#usage)
+- [Hooks](#hooks)
+    - [Payload](#payload)
+- [API Usage](#api-usage)
     - [Search (GET)](#search-get)
     - [Pagination (GET)](#pagination-get)
     - [Body (POST/PUT)](#body-postput)
@@ -18,6 +20,9 @@
         - [Requirements](#requirements)
         - [Steps](#steps)
 - [Configure](#configure)
+    - [Mandatory](#mandatory)
+    - [Mandatory on Production](#mandatory-on-prod)
+    - [Optional](#optional)
 - [Roadmap](#roadmap)
 
 ## General description
@@ -134,7 +139,7 @@ Must give a JSON with 2 fields `responses` and `params`
 > Multiple hooks can be added to a single event
 > `events: ["index", "show", "create", "update", "delete"]`
 
-## Usage
+## API Usage
 
 Like all API's, exist a basic usage on how to use it, the basic routes and operations are
 
@@ -179,7 +184,7 @@ GET /api/v1/:schema?page=0&count=20
 
 ## Swagger
 
-To open the Swagger UI just go to the path `api_docs/v1` and it's ready to use
+To open the Swagger UI just go to the path `api_docs/v1` or click on the link in the UI and it's ready to use
 
 ## How to run:
 

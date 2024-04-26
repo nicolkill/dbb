@@ -70,7 +70,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
           {:update_table_record, [db_record, record]}
       end
 
-    {:ok, %Table{id: id} = record} = apply(Content, func, args)
+    {:ok, %Table{id: id}} = apply(Content, func, args)
 
     #    action
     #    |> String.to_atom()
