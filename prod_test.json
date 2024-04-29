@@ -1,5 +1,7 @@
 {
-  "ui_title": "example title",
+  "ui": {
+    "title": "example title"
+  },
   "schemas": [
     {
       "name": "order_product",
@@ -24,7 +26,11 @@
         "age": "number",
         "male": "boolean",
         "birth": "datetime",
-        "flags": ["string"]
+        "flags": ["string"],
+        "sku": "string"
+      },
+      "generate": {
+        "sku": "$str(4)$-$num(4)$-$sym(4)$-$any(4)$"
       }
     },
     {

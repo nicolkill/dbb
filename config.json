@@ -1,5 +1,7 @@
 {
-  "ui_title": "some example title",
+  "ui": {
+    "title": "some example title"
+  },
   "schemas": [
     {
       "name": "users",

@@ -123,11 +123,14 @@ defmodule DbbWeb.TableControllerTest do
                  "birth" => "2023-05-02 00:00:00",
                  "male" => true,
                  "name" => "Pancracio",
-                 "flags" => ["flag-1", "flag-2"]
+                 "flags" => ["flag-1", "flag-2"],
+                 "sku" => sku
                },
                "reference" => nil,
                "schema" => "users"
              } = json_response(conn, 200)["data"]
+
+      assert [_, _, _, _] = String.split(sku, "-")
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

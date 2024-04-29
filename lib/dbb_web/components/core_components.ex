@@ -624,7 +624,7 @@ defmodule DbbWeb.CoreComponents do
                 Map.get(element, :class, "")
               ]}
             >
-              <%= Utils.capitalize_snake_case(element.text) %>
+              <%= Dbb.Utils.capitalize_snake_case(element.text) %>
             </a>
           </div>
         </div>

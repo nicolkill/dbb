@@ -26,7 +26,7 @@ defmodule Dbb.Swagger do
   defp swg_properties("boolean"), do: %{"type" => "boolean"}
   defp swg_properties(data) when is_list(data), do: %{"type" => "array"}
 
-  defp cap_name(schema), do: Utils.modularize_snake_case(schema["name"])
+  defp cap_name(schema), do: Dbb.Utils.modularize_snake_case(schema["name"])
 
   defp swg_parameter_path_id(schema) do
     %{

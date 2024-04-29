@@ -4,7 +4,7 @@
   <div class="flex gap-4">
     <div :for={schema <- @schemas}>
       <.button_link navigate={"/#{schema}"} class="bg-gray-300 hover:bg-gray-400">
-        <%= Utils.capitalize_snake_case(schema) %>
+        <%= Dbb.Utils.capitalize_snake_case(schema) %>
       </.button_link>
     </div>
   </div>

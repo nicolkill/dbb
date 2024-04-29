@@ -8,12 +8,58 @@ defmodule Dbb.TableHandler do
       |> Map.get("schemas")
       |> Enum.find(&(Map.get(&1, "name") == schema_name))
 
+  defp param_to_length(param_str) do
+    param_str
+    |> String.replace("(", "")
+    |> String.replace(")", "")
+    |> String.to_integer()
+  end
+
+  defp token_process("str" <> params), do: token_to_value(params, :gen_str)
+  defp token_process("num" <> params), do: token_to_value(params, :gen_num)
+  defp token_process("sym" <> params), do: token_to_value(params, :gen_sym)
+  defp token_process("str_num" <> params), do: token_to_value(params, :gen_str_num)
+  defp token_process("any" <> params), do: token_to_value(params, :gen_any)
+  defp token_process(token), do: token
+
+  defp token_to_value(params, func) do
+    length = param_to_length(params)
+    apply(Dbb.Utils, func, [length])
+  end
+
+  defp generate(value) do
+    value
+    |> String.split("$")
+    |> Enum.map(&token_process/1)
+    |> Enum.join("")
+  end
+
+  defp generate_fields(nil, _), do: nil
+  defp generate_fields(data, []), do: data
+
+  defp generate_fields(data, [{key, value} | rest]) do
+    value = generate(value)
+
+    data
+    |> Map.put_new(key, value)
+    |> generate_fields(rest)
+  end
+
   def type_transform(types) when is_list(types), do: Enum.map(types, &type_transform/1)
   def type_transform(type), do: String.to_atom(type)
 
   defp extract_data(schema_config, params) do
+    generate_fields =
+      schema_config
+      |> Map.get("generate")
+      |> Map.to_list()
+
     schema_fields = Map.get(schema_config, "fields")
-    general_data = Map.get(params, "data", nil)
+
+    general_data =
+      params
+      |> Map.get("data", nil)
+      |> generate_fields(generate_fields)
 
     is_valid? =
       case general_data do

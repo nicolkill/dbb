@@ -52,6 +52,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
 
   def handle_event("save", _, socket) do
     schema_fields = get_assign(socket, :schema_fields)
+
     record =
       socket
       |> get_assign(:record)
@@ -118,6 +119,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
 
   defp get_invalid_fields(record, schema_fields) do
     record = transform_record_values(record, schema_fields)
+
     result =
       schema_fields
       |> transform_schema_fields_to_optional()
@@ -162,6 +164,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
       schema_fields
       |> Enum.filter(&is_list(elem(&1, 1)))
       |> tuple_list_to_map()
+
     list_records =
       record
       |> Map.take(Map.keys(list_fields))

@@ -151,6 +151,7 @@ defmodule Dbb.Content do
       case attrs do
         nil ->
           attrs
+
         attrs ->
           Map.merge(data, attrs)
       end
