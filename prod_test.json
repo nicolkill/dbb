@@ -4,20 +4,6 @@
   },
   "schemas": [
     {
-      "name": "order_product",
-      "fields": {
-        "order_id": "string",
-        "product_id": "string"
-      }
-    },
-    {
-      "name": "orders",
-      "fields": {
-        "user_id": "string",
-        "delivery_time": "datetime"
-      }
-    },
-    {
       "name": "users",
       "fields": {
         "email": "string",
@@ -27,17 +13,49 @@
         "male": "boolean",
         "birth": "datetime",
         "flags": ["string"],
-        "sku": "string"
+        "sku": "string",
+        "product_id": "string"
       },
       "generate": {
         "sku": "$str(4)$-$num(4)$-$sym(4)$-$any(4)$"
+      },
+      "hooks": [
+        {
+          "events": ["create"],
+          "url": "https://someurl.test/webhook",
+          "method": "post",
+          "headers": {
+            "custom_header": "header value"
+          }
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "fields": {
+        "user_id": "string",
+        "estimated_delivery_time": "datetime"
+      },
+      "relations": {
+        "user_id": "users"
+      }
+    },
+    {
+      "name": "order_product",
+      "fields": {
+        "order_id": "string",
+        "product_id": "string"
+      },
+      "relations": {
+        "order_id": "orders",
+        "product_id": "products"
       }
     },
     {
       "name": "products",
       "fields": {
         "name": "string",
-        "expiration": "datetime"
+        "description": "string"
       }
     }
   ]

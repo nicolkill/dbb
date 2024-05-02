@@ -106,7 +106,8 @@ defmodule DbbWeb.TableControllerTest do
   describe "create users" do
     test "renders users when data is valid", %{conn: conn} do
       Tesla.Mock.mock(fn
-        %{method: :post, url: "https://someurl.test/webhook"} ->
+        %{method: :post, url: "https://someurl.test/webhook"} = env ->
+          assert [{"custom_header", "header value"} | _] = env.headers
           %Tesla.Env{status: 200, url: "https://someurl.test/webhook", body: %{"status" => "Ok"}}
       end)
 
@@ -149,8 +150,8 @@ defmodule DbbWeb.TableControllerTest do
   describe "update user" do
     setup [:create_users]
 
-    test "renders users when data is valid", %{conn: conn, users: users} do
-      %Table{id: id} = user = Enum.at(users, 0)
+    test "renders users when data is valid", %{conn: conn, users: [user | _]} do
+      %Table{id: id} = user
 
       conn = put(conn, ~p"/api/v1/users/#{user}", data: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
@@ -177,6 +178,48 @@ defmodule DbbWeb.TableControllerTest do
     end
   end
 
+  describe "products and orders relations" do
+    setup [:create_users, :create_product]
+
+    test "relates product with user", %{conn: conn, users: [user | _], product: product} do
+      attrs = %{
+        user_id: user.id,
+        estimated_delivery_time: "2024-04-24 00:00:00"
+      }
+
+      conn = post(conn, ~p"/api/v1/orders", data: attrs)
+      assert %{"id" => order_id} = json_response(conn, 201)["data"]
+
+      attrs = %{
+        "order_id" => order_id,
+        "product_id" => product.id
+      }
+
+      conn = post(conn, ~p"/api/v1/order_product", data: attrs)
+      assert %{"id" => _} = json_response(conn, 201)["data"]
+    end
+
+    test "creates table record without relation", %{conn: conn} do
+      attrs = %{
+        estimated_delivery_time: "2024-04-24 00:00:00"
+      }
+
+      conn = post(conn, ~p"/api/v1/orders", data: attrs)
+      assert %{"id" => _} = json_response(conn, 201)["data"]
+    end
+
+    test "fails on relation with not existing relation", %{conn: conn} do
+      attrs = %{
+        # not exist
+        user_id: "78b6130b-1eea-4647-9769-1f96a4b32d93",
+        estimated_delivery_time: "2024-04-24 00:00:00"
+      }
+
+      conn = post(conn, ~p"/api/v1/orders", data: attrs)
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+  end
+
   describe "delete element" do
     setup [:create_users]
 
@@ -197,5 +240,31 @@ defmodule DbbWeb.TableControllerTest do
     user3 = users_fixture(%{"name" => "mike"})
 
     %{users: [user1, user2, user3]}
+  end
+
+  #  defp create_order(%{users: [user | _], product: product}) do
+  #    order =
+  #      orders_fixture(%{
+  #        "user_id" => user.id,
+  #        "estimated_delivery_time" => "2024-04-24 00:00:00"
+  #      })
+  #
+  #    relation =
+  #      order_product_fixture(%{
+  #        "order_id" => order.id,
+  #        "product_id" => product.id
+  #      })
+  #
+  #    %{order: order, relation: relation}
+  #  end
+
+  defp create_product(_) do
+    product =
+      products_fixture(%{
+        "name" => "phone case",
+        "description" => "this it's a phone case to any type of phone"
+      })
+
+    %{product: product}
   end
 end

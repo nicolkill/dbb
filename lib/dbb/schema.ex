@@ -19,6 +19,9 @@ defmodule Dbb.Schema do
         generate?: %{
           string: :string
         },
+        relations?: %{
+          string: :products
+        },
         hooks?: [
           %{
             events: [:string],

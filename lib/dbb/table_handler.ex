@@ -1,6 +1,11 @@
 defmodule Dbb.TableHandler do
-  alias Dbb.Schema
+  @moduledoc """
+  This module handles all internal operations and verifications of every table record
+  """
+
+  alias Dbb.Content
   alias Dbb.Content.Table
+  alias Dbb.Schema
 
   defp get_config_schema(schema_name),
     do:
@@ -48,13 +53,62 @@ defmodule Dbb.TableHandler do
   def type_transform(types) when is_list(types), do: Enum.map(types, &type_transform/1)
   def type_transform(type), do: String.to_atom(type)
 
+  defp validates_data_with_schema(data, schema_fields) when is_map(data) do
+    schema_fields =
+      Enum.reduce(
+        schema_fields,
+        %{},
+        fn {key, type}, acc ->
+          type = type_transform(type)
+          key = String.to_atom("#{key}?")
+          Map.put(acc, key, type)
+        end
+      )
+
+    {:ok, nil} == MapSchemaValidator.validate(schema_fields, data)
+  end
+
+  defp validates_data_with_schema(_, _), do: false
+
+  defp validates_relations(_, nil, _), do: false
+
+  defp validates_relations(true, data, [{key, schema} | rest]) do
+    is_valid_value? = fn
+      nil ->
+        # todo: here check if the key it's marked as mandatory
+        true
+
+      id ->
+        try do
+          Content.get_table_record!(schema, id)
+        rescue
+          _ ->
+            nil
+        end
+        |> is_nil()
+        |> Kernel.!()
+    end
+
+    data
+    |> Map.get(key)
+    |> is_valid_value?.()
+    |> validates_relations(data, rest)
+  end
+
+  defp validates_relations(valid?, _, _), do: valid?
+
   defp extract_data(schema_config, params) do
-    generate_fields =
+    schema_fields = Map.get(schema_config, "fields")
+
+    relations_fields =
       schema_config
-      |> Map.get("generate")
+      |> Map.get("relations", %{})
       |> Map.to_list()
 
-    schema_fields = Map.get(schema_config, "fields")
+    generate_fields =
+      schema_config
+      |> Map.get("generate", %{})
+      |> Map.to_list()
 
     general_data =
       params
@@ -62,24 +116,9 @@ defmodule Dbb.TableHandler do
       |> generate_fields(generate_fields)
 
     is_valid? =
-      case general_data do
-        data when is_map(data) ->
-          schema_fields =
-            Enum.reduce(
-              schema_fields,
-              %{},
-              fn {key, type}, acc ->
-                type = type_transform(type)
-                key = String.to_atom("#{key}?")
-                Map.put(acc, key, type)
-              end
-            )
-
-          {:ok, nil} == MapSchemaValidator.validate(schema_fields, data)
-
-        _ ->
-          false
-      end
+      general_data
+      |> validates_data_with_schema(schema_fields)
+      |> validates_relations(general_data, relations_fields)
 
     if is_valid? do
       schema_fields_keys = Map.keys(schema_fields)
