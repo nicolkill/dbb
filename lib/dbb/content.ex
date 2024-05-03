@@ -52,16 +52,14 @@ defmodule Dbb.Content do
     schema_relations =
       record
       |> Map.get(:schema)
-      |> TableHandler.get_config_schema()
-      |> Map.get("relations", %{})
+      |> TableHandler.get_relation_schema()
+
+    #      |> IO.inspect(label: "###########")
 
     relations =
       Enum.reduce(relations, %{}, fn r, acc ->
-        schema_relations
-        |> IO.inspect(label: "####### relations")
-
         key = "#{r}_id"
-        related_schema = Map.get(schema_relations, key)
+        %{"value" => related_schema} = Map.get(schema_relations, key)
 
         id =
           record

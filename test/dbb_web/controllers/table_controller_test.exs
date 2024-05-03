@@ -230,13 +230,13 @@ defmodule DbbWeb.TableControllerTest do
       assert %{"id" => _} = json_response(conn, 201)["data"]
     end
 
-    test "creates table record without relation", %{conn: conn} do
+    test "fails create table record without relation because it's mandatory", %{conn: conn} do
       attrs = %{
         estimated_delivery_time: "2024-04-24 00:00:00"
       }
 
       conn = post(conn, ~p"/api/v1/orders", data: attrs)
-      assert %{"id" => _} = json_response(conn, 201)["data"]
+      assert json_response(conn, 422)["errors"] != %{}
     end
 
     test "fails on relation with not existing relation", %{conn: conn} do

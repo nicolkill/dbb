@@ -13,8 +13,7 @@
         "male": "boolean",
         "birth": "datetime",
         "flags": ["string"],
-        "sku": "string",
-        "product_id": "string"
+        "sku": "string"
       },
       "generate": {
         "sku": "$str(4)$-$num(4)$-$sym(4)$-$any(4)$"
@@ -37,7 +36,7 @@
         "estimated_delivery_time": "datetime"
       },
       "relations": {
-        "user_id": "users"
+        "user_id:mandatory": "users"
       }
     },
     {
@@ -47,8 +46,8 @@
         "product_id": "string"
       },
       "relations": {
-        "order_id": "orders",
-        "product_id": "products"
+        "order_id:mandatory": "orders",
+        "product_id:mandatory": "products"
       }
     },
     {

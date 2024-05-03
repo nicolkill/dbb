@@ -7,11 +7,39 @@ defmodule Dbb.TableHandler do
   alias Dbb.Content.Table
   alias Dbb.Schema
 
-  def get_config_schema(schema_name),
+  defp get_config_schema(schema_name),
     do:
       Schema.get_config()
       |> Map.get("schemas")
       |> Enum.find(&(Map.get(&1, "name") == schema_name))
+
+  defp key_extract(key) do
+    key
+    |> String.split(":")
+    |> then(fn
+      [key] ->
+        {key, false}
+
+      [key, _] ->
+        {key, true}
+    end)
+  end
+
+  def get_relation_schema(schema_config) when is_map(schema_config) do
+    schema_config
+    |> Map.get("relations", %{})
+    |> Map.to_list()
+    |> Enum.reduce(%{}, fn {key, value}, acc ->
+      {key, mandatory} = key_extract(key)
+      Map.put(acc, key, %{"value" => value, "mandatory" => mandatory})
+    end)
+  end
+
+  def get_relation_schema(schema_name) do
+    schema_name
+    |> get_config_schema()
+    |> get_relation_schema()
+  end
 
   defp param_to_length(param_str) do
     param_str
@@ -72,11 +100,12 @@ defmodule Dbb.TableHandler do
 
   defp validates_relations(_, nil, _), do: false
 
-  defp validates_relations(true, data, [{key, schema} | rest]) do
+  defp validates_relations(true, data, [
+         {key, %{"mandatory" => mandatory, "value" => schema}} | rest
+       ]) do
     is_valid_value? = fn
       nil ->
-        # todo: here check if the key it's marked as mandatory
-        true
+        !mandatory
 
       id ->
         try do
@@ -102,7 +131,7 @@ defmodule Dbb.TableHandler do
 
     relations_fields =
       schema_config
-      |> Map.get("relations", %{})
+      |> get_relation_schema()
       |> Map.to_list()
 
     generate_fields =
