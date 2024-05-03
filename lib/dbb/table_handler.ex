@@ -7,7 +7,7 @@ defmodule Dbb.TableHandler do
   alias Dbb.Content.Table
   alias Dbb.Schema
 
-  defp get_config_schema(schema_name),
+  def get_config_schema(schema_name),
     do:
       Schema.get_config()
       |> Map.get("schemas")
@@ -168,6 +168,19 @@ defmodule Dbb.TableHandler do
       end)
 
     query
+  end
+
+  def relations(params) do
+    params
+    |> Map.get("relations", "")
+    |> String.split(",")
+    |> then(fn
+      [""] ->
+        []
+
+      data ->
+        data
+    end)
   end
 
   defp tesla_client() do

@@ -34,7 +34,8 @@
     - [x] Exists the field
     - [x] Not exist the field
     - [x] Multiple query fields
-    - [ ] Related fields aggregation
+    - [x] Related fields aggregation
+    - [ ] Many to One and Many to Many queries
 - [x] Admin panel (CRUD) by config
     - [ ] Login with username/password
     - [x] Custom title for UI

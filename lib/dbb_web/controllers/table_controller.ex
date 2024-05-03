@@ -11,16 +11,18 @@ defmodule DbbWeb.TableController do
     {schema, _, _} = TableHandler.validate_schema(params)
     {page, count} = TableHandler.pagination(params)
     query = TableHandler.search(params)
+    relations = TableHandler.relations(params)
 
-    table_record = Content.list_table_records(schema, query, page, count)
+    table_record = Content.list_table_records(schema, query, page, count, relations)
     TableHandler.hooks(:index, schema, params)
-    render(conn, :index, table: table_record, page: page, count: count)
+    render(conn, :index, table: table_record, page: page, count: count, relations: relations)
   end
 
   def show(conn, params) do
     {schema, id, _} = TableHandler.validate_schema(params)
+    relations = TableHandler.relations(params)
 
-    table_record = Content.get_table_record!(schema, id)
+    table_record = Content.get_table_record!(schema, id, relations)
     TableHandler.hooks(:show, schema, params, table_record)
     render(conn, :show, table: table_record)
   end

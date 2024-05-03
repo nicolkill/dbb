@@ -37,7 +37,7 @@ defmodule DbbWeb.TableControllerTest do
   end
 
   describe "index with users" do
-    setup [:create_users]
+    setup [:create_users, :create_product, :create_order]
 
     test "lists all users", %{conn: conn} do
       conn = get(conn, "/api/v1/users?page=1&count=2")
@@ -66,7 +66,7 @@ defmodule DbbWeb.TableControllerTest do
 
       assert [
                %{
-                 "data" => %{"name" => "jhon"},
+                 "data" => %{"name" => "john"},
                  "schema" => "users"
                },
                %{
@@ -81,7 +81,7 @@ defmodule DbbWeb.TableControllerTest do
 
       assert [
                %{
-                 "data" => %{"name" => "jhon"},
+                 "data" => %{"name" => "john"},
                  "schema" => "users"
                },
                %{
@@ -98,6 +98,39 @@ defmodule DbbWeb.TableControllerTest do
                %{
                  "data" => %{"name" => "mike"},
                  "schema" => "users"
+               }
+             ] = json_response(conn, 200)["data"]
+    end
+
+    test "lists all users that starts with the word 'john' and preload relations", %{conn: conn} do
+      conn = get(conn, "/api/v1/users?q=name:john")
+
+      assert [
+               %{
+                 "data" => %{
+                   "name" => "john"
+                 },
+                 "id" => user_id,
+                 "schema" => "users"
+               }
+             ] = json_response(conn, 200)["data"]
+
+      conn = get(conn, "/api/v1/orders?q=user_id:#{user_id}&relations=user")
+
+      assert [
+               %{
+                 "data" => %{
+                   "user_id" => ^user_id
+                 },
+                 "relations" => %{
+                   "users" => %{
+                     "data" => %{
+                       "name" => "john"
+                     },
+                     "id" => ^user_id
+                   }
+                 },
+                 "schema" => "orders"
                }
              ] = json_response(conn, 200)["data"]
     end
@@ -127,7 +160,6 @@ defmodule DbbWeb.TableControllerTest do
                  "flags" => ["flag-1", "flag-2"],
                  "sku" => sku
                },
-               "reference" => nil,
                "schema" => "users"
              } = json_response(conn, 200)["data"]
 
@@ -165,7 +197,6 @@ defmodule DbbWeb.TableControllerTest do
                  "name" => "Pancracio Jr",
                  "flags" => ["flag-3"]
                },
-               "reference" => nil,
                "schema" => "users"
              } = json_response(conn, 200)["data"]
     end
@@ -235,28 +266,28 @@ defmodule DbbWeb.TableControllerTest do
   end
 
   defp create_users(_) do
-    user1 = users_fixture(%{"name" => "jhon", "age" => 20})
+    user1 = users_fixture(%{"name" => "john", "age" => 20})
     user2 = users_fixture(%{"name" => "jim", "age" => 22})
     user3 = users_fixture(%{"name" => "mike"})
 
     %{users: [user1, user2, user3]}
   end
 
-  #  defp create_order(%{users: [user | _], product: product}) do
-  #    order =
-  #      orders_fixture(%{
-  #        "user_id" => user.id,
-  #        "estimated_delivery_time" => "2024-04-24 00:00:00"
-  #      })
-  #
-  #    relation =
-  #      order_product_fixture(%{
-  #        "order_id" => order.id,
-  #        "product_id" => product.id
-  #      })
-  #
-  #    %{order: order, relation: relation}
-  #  end
+  defp create_order(%{users: [user | _], product: product}) do
+    order =
+      orders_fixture(%{
+        "user_id" => user.id,
+        "estimated_delivery_time" => "2024-04-24 00:00:00"
+      })
+
+    relation =
+      order_product_fixture(%{
+        "order_id" => order.id,
+        "product_id" => product.id
+      })
+
+    %{order: order, relation: relation}
+  end
 
   defp create_product(_) do
     product =

@@ -20,10 +20,17 @@ defmodule DbbWeb.TableJSON do
   end
 
   defp data(%Table{} = table) do
+    relations =
+      table
+      |> Map.get(:relations, %{})
+      |> Enum.reduce(%{}, fn {key, value}, acc ->
+        Map.put(acc, key, data(value))
+      end)
+
     %{
       id: table.id,
       schema: table.schema,
-      reference: table.reference,
+      relations: relations,
       data: table.data,
       inserted_at: table.inserted_at,
       updated_at: table.updated_at

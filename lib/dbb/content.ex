@@ -4,9 +4,10 @@ defmodule Dbb.Content do
   """
 
   import Ecto.Query, warn: false
-  alias Dbb.Repo
 
+  alias Dbb.Repo
   alias Dbb.Content.Table
+  alias Dbb.TableHandler
 
   defp dynamic_filters([]), do: true
   defp dynamic_filters([{}]), do: true
@@ -39,6 +40,42 @@ defmodule Dbb.Content do
     end)
   end
 
+  defp add_relations(record, relations \\ [])
+
+  defp add_relations({:ok, record}, relations) do
+    {:ok, add_relations(record, relations)}
+  end
+
+  defp add_relations(record, _) when is_tuple(record), do: record
+
+  defp add_relations(record, relations) do
+    schema_relations =
+      record
+      |> Map.get(:schema)
+      |> TableHandler.get_config_schema()
+      |> Map.get("relations", %{})
+
+    relations =
+      Enum.reduce(relations, %{}, fn r, acc ->
+        schema_relations
+        |> IO.inspect(label: "####### relations")
+
+        key = "#{r}_id"
+        related_schema = Map.get(schema_relations, key)
+
+        id =
+          record
+          |> Map.get(:data)
+          |> Map.get(key)
+
+        related_record = get_table_record!(related_schema, id)
+
+        Map.put(acc, related_schema, related_record)
+      end)
+
+    Map.put(record, :relations, relations)
+  end
+
   @doc """
   Returns the list of table.
 
@@ -48,10 +85,19 @@ defmodule Dbb.Content do
       [%Table{}, ...]
 
   """
-  @spec list_table_records(String.t(), list(), number(), number(), boolean()) :: [Table]
-  def list_table_records(nil, _, _, _), do: []
+  @spec list_table_records(String.t(), list(), number(), number(), list(), boolean()) :: [Table]
+  def list_table_records(
+        schema,
+        query \\ [],
+        page \\ 0,
+        count \\ 10,
+        relations \\ [],
+        soft_delete \\ true
+      )
 
-  def list_table_records(schema, query, page, count, soft_delete \\ true) do
+  def list_table_records(nil, _, _, _, _, _), do: []
+
+  def list_table_records(schema, query, page, count, relations, soft_delete) do
     criteria = dynamic_filters(query)
 
     offset = (page + 1) * count - count
@@ -69,6 +115,7 @@ defmodule Dbb.Content do
     |> limit(^count)
     |> offset(^offset)
     |> Repo.all()
+    |> Enum.map(&add_relations(&1, relations))
   end
 
   @doc """
@@ -86,13 +133,15 @@ defmodule Dbb.Content do
 
   """
   @spec get_table_record!(String.t(), String.t()) :: Table
-  def get_table_record!(nil, _), do: {:error, :not_found}
+  def get_table_record!(schema, id, relations \\ [])
+  def get_table_record!(nil, _, _), do: {:error, :not_found}
 
-  def get_table_record!(schema, id) do
+  def get_table_record!(schema, id, relations) do
     Table
     |> where(schema: ^schema)
     |> where([t], is_nil(t.deleted_at))
     |> Repo.get!(id)
+    |> add_relations(relations)
   end
 
   defp is_atom_key(nil), do: true
@@ -130,6 +179,7 @@ defmodule Dbb.Content do
     %Table{}
     |> Table.changeset(attrs)
     |> Repo.insert()
+    |> add_relations()
   end
 
   @doc """
@@ -160,6 +210,7 @@ defmodule Dbb.Content do
     table
     |> Table.changeset(attrs)
     |> Repo.update()
+    |> add_relations()
   end
 
   @doc """
@@ -178,6 +229,7 @@ defmodule Dbb.Content do
     table
     |> Table.changeset_delete(%{deleted_at: NaiveDateTime.utc_now()})
     |> Repo.update()
+    |> add_relations()
   end
 
   @doc """
