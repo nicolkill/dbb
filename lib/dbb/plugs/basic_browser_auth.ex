@@ -6,7 +6,7 @@ defmodule Dbb.Plugs.BasicBrowserAuth do
   def call(conn, _) do
     basic_auth_config = basic_auth()
 
-    case Keyword.get(basic_auth_config, :enabled?, false) do
+    case Keyword.get(basic_auth_config, :enabled?, false) and Mix.env() != :test do
       true ->
         Plug.BasicAuth.basic_auth(conn, basic_auth_config)
 

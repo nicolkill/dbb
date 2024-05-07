@@ -12,11 +12,7 @@
         "age": "number",
         "male": "boolean",
         "birth": "datetime",
-        "flags": ["string"],
-        "sku": "string"
-      },
-      "generate": {
-        "sku": "$str(4)$-$num(4)$-$sym(4)$-$any(4)$"
+        "flags": ["string"]
       },
       "hooks": [
         {
@@ -54,7 +50,11 @@
       "name": "products",
       "fields": {
         "name": "string",
-        "description": "string"
+        "description": "string",
+        "sku": "string"
+      },
+      "generate": {
+        "sku": "$str(4)$-$num(4)$-$sym(4)$-$any(4)$"
       }
     }
   ]

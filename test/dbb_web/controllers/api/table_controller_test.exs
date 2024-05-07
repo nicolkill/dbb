@@ -6,21 +6,26 @@ defmodule DbbWeb.TableControllerTest do
   alias Dbb.Schema
   alias Dbb.Content.Table
 
-  @create_attrs %{
+  @user_create_attrs %{
     age: 20,
     male: true,
     name: "Pancracio",
     birth: "2023-05-02 00:00:00",
     flags: ["flag-1", "flag-2"]
   }
-  @update_attrs %{
+  @user_update_attrs %{
     male: true,
     name: "Pancracio Jr",
     flags: ["flag-3"]
   }
-  @invalid_attrs %{
+  @user_invalid_attrs %{
     male: 20,
     flags: [false]
+  }
+
+  @product_create_attrs %{
+    name: "macbook pro",
+    description: "this it's a very expensive laptop"
   }
 
   setup %{conn: conn} do
@@ -144,7 +149,7 @@ defmodule DbbWeb.TableControllerTest do
           %Tesla.Env{status: 200, url: "https://someurl.test/webhook", body: %{"status" => "Ok"}}
       end)
 
-      conn = post(conn, ~p"/api/v1/users", data: @create_attrs)
+      conn = post(conn, ~p"/api/v1/users", data: @user_create_attrs)
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
@@ -157,24 +162,43 @@ defmodule DbbWeb.TableControllerTest do
                  "birth" => "2023-05-02 00:00:00",
                  "male" => true,
                  "name" => "Pancracio",
-                 "flags" => ["flag-1", "flag-2"],
-                 "sku" => sku
+                 "flags" => ["flag-1", "flag-2"]
                },
                "schema" => "users"
              } = json_response(conn, 200)["data"]
-
-      assert [_, _, _, _] = String.split(sku, "-")
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/api/v1/users", data: @invalid_attrs)
+      conn = post(conn, ~p"/api/v1/users", data: @user_invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
+    end
+  end
+
+  describe "create product" do
+    test "renders users when data is valid", %{conn: conn} do
+      conn = post(conn, ~p"/api/v1/products", data: @product_create_attrs)
+
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      conn = get(conn, ~p"/api/v1/products/#{id}")
+
+      assert %{
+               "id" => ^id,
+               "data" => %{
+                 "name" => "macbook pro",
+                 "description" => "this it's a very expensive laptop",
+                 "sku" => sku
+               },
+               "schema" => "products"
+             } = json_response(conn, 200)["data"]
+
+      assert [_, _, _, _] = String.split(sku, "-")
     end
   end
 
   describe "calls to not existing schema" do
     test "creates a record on not existing schema", %{conn: conn} do
-      conn = post(conn, ~p"/api/v1/unknown", data: @create_attrs)
+      conn = post(conn, ~p"/api/v1/unknown", data: @user_create_attrs)
       assert %{"message" => "not found body"} = json_response(conn, 422)
     end
   end
@@ -185,7 +209,7 @@ defmodule DbbWeb.TableControllerTest do
     test "renders users when data is valid", %{conn: conn, users: [user | _]} do
       %Table{id: id} = user
 
-      conn = put(conn, ~p"/api/v1/users/#{user}", data: @update_attrs)
+      conn = put(conn, ~p"/api/v1/users/#{user}", data: @user_update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, ~p"/api/v1/users/#{id}")
@@ -203,7 +227,7 @@ defmodule DbbWeb.TableControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn, users: users} do
       user = Enum.at(users, 0)
-      conn = put(conn, ~p"/api/v1/users/#{user}", data: @invalid_attrs)
+      conn = put(conn, ~p"/api/v1/users/#{user}", data: @user_invalid_attrs)
 
       assert json_response(conn, 422)["errors"] != %{}
     end
