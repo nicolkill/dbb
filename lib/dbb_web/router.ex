@@ -8,17 +8,17 @@ defmodule DbbWeb.Router do
     plug :put_root_layout, html: {DbbWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Dbb.Plugs.BasicBrowserAuth
   end
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug Dbb.Plugs.Auth
+    plug Dbb.Plugs.BasicApiAuth
   end
 
   scope "/", DbbWeb do
     pipe_through :browser
 
-    #    get "/", Page.PageController, :home
     live "/", Admin.AdminLive
     live "/:schema", AdminTable.AdminTableLive
     live "/:schema/create", AdminTable.AdminTableFormLive

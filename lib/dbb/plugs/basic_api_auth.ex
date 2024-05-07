@@ -1,4 +1,4 @@
-defmodule Dbb.Plugs.Auth do
+defmodule Dbb.Plugs.BasicApiAuth do
   import Plug.Conn
 
   defp api_key, do: Application.get_env(:dbb, :general_config)[:api_key]

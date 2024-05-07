@@ -37,7 +37,7 @@
     - [x] Related fields aggregation
     - [ ] Many to One and Many to Many queries
 - [x] Admin panel (CRUD) by config
-    - [ ] Login with username/password
+    - [x] Login with username/password
     - [x] Custom title for UI
     - [ ] Show all schemas and details
     - [x] List of available schemas

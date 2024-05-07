@@ -32,6 +32,13 @@ config :dbb, :general_config,
   file: System.get_env("CONFIG_SCHEMA"),
   api_key: System.get_env("ALLOWED_API_KEY")
 
+username = System.get_env("ADMIN_AUTH_USERNAME")
+
+config :dbb, :basic_auth,
+  enabled?: !is_nil(username),
+  username: username,
+  password: System.get_env("ADMIN_AUTH_PASSWORD")
+
 if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 

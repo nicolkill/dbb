@@ -12,6 +12,9 @@ services:
       ALLOWED_SITES: "*"
       CONFIG_SCHEMA: prod_test.json
 
+      ADMIN_AUTH_USERNAME: user
+      ADMIN_AUTH_PASSWORD: pass
+
       # db config
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: postgres

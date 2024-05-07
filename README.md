@@ -296,10 +296,13 @@ The schema config exists on his own file, but the server it's configured by env 
 
 #### Optional
 
-| Env var | Value | Default | Description |
+| Env var | Value  | Default | Description |
 |---|---|---|---|
 | PORT | integer | 4000 | Port number, just for dev |
-| ALLOWED_API_KEY | string | Static API Key to secure calls on API CRUD |
+| ALLOWED_API_KEY | string | | Static API Key to secure calls on API CRUD |
+| ADMIN_AUTH_USERNAME | string | | Static login username to Admin |
+| ADMIN_AUTH_PASSWORD | string | | Static login password to Admin |
+| POOL_SIZE | integer | 10 | Database postgres pool size |
 
 > In case that prod deployment, the port it's `443` (https) and the port it's for standart calls, but this will be
 redirected
