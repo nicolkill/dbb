@@ -7,7 +7,7 @@ defmodule Dbb.TableHandler do
   alias Dbb.Content.Table
   alias Dbb.Schema
 
-  defp get_config_schema(schema_name),
+  def get_config_schema(schema_name),
     do:
       Schema.get_config()
       |> Map.get("schemas")

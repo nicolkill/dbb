@@ -15,11 +15,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
   def mount(%{"id" => _} = params, _session, socket) do
     {schema_name, id, _} = TableHandler.validate_schema(params)
     %Table{data: record} = db_record = Content.get_table_record!(schema_name, id)
-
-    schema =
-      Schema.get_config()
-      |> Map.get("schemas")
-      |> Enum.find(&(Map.get(&1, "name") == schema_name))
+    schema = TableHandler.get_config_schema(schema_name)
 
     socket =
       socket
@@ -51,12 +47,24 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
   end
 
   def handle_event("save", _, socket) do
+    schema_name = get_assign(socket, :schema_name)
     schema_fields = get_assign(socket, :schema_fields)
 
     record =
       socket
       |> get_assign(:record)
       |> transform_record_values(schema_fields)
+      |> Map.to_list()
+      |> Enum.reduce(%{}, fn
+        {_, ""}, acc ->
+          acc
+
+        {k, v}, acc ->
+          Map.put(acc, k, v)
+      end)
+
+    {_, _, {:ok, record}} =
+      TableHandler.validate_schema(%{"schema" => schema_name, "data" => record})
 
     action = get_assign(socket, :action)
     schema_name = get_assign(socket, :schema_name)
@@ -138,9 +146,12 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
   end
 
   defp configure_socket(socket, schema, record, db_record \\ nil) do
+    schema_fields = Map.get(schema, "fields")
+    record = transform_record_values(record, schema_fields)
+
     socket
     |> assign(:schema_name, Map.get(schema, "name"))
-    |> assign(:schema_fields, Map.get(schema, "fields"))
+    |> assign(:schema_fields, schema_fields)
     |> assign(:schema_hooks, Map.get(schema, "hooks"))
     |> assign(:record, record)
     |> assign(:db_record, db_record)
@@ -160,19 +171,26 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
   end
 
   defp transform_record_values(record, schema_fields) do
-    list_fields =
-      schema_fields
-      |> Enum.filter(&is_list(elem(&1, 1)))
-      |> tuple_list_to_map()
+    list_fields = get_list_fields(schema_fields)
 
     list_records =
       record
       |> Map.take(Map.keys(list_fields))
-      |> Enum.map(fn {k, v} ->
-        {k, v |> String.split(",") |> Enum.map(&String.trim/1)}
+      |> Enum.map(fn
+        {k, v} when is_list(v) ->
+          {k, Enum.join(v, ", ")}
+
+        {k, v} ->
+          {k, v |> String.split(",") |> Enum.map(&String.trim/1)}
       end)
       |> tuple_list_to_map()
 
     Map.merge(record, list_records)
+  end
+
+  defp get_list_fields(schema_fields) do
+    schema_fields
+    |> Enum.filter(&is_list(elem(&1, 1)))
+    |> tuple_list_to_map()
   end
 end

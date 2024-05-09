@@ -42,9 +42,12 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
       |> Map.get(:data)
       |> Map.get(field)
 
-    case type do
-      "boolean" ->
+    case {type, value} do
+      {"boolean", _} ->
         checkbox(%{checked: value})
+
+      {_, value} when is_list(value) ->
+        Enum.join(value, ", ")
 
       _ ->
         value
