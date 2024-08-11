@@ -19,6 +19,7 @@
     - [Cloning the repo](#cloning-the-repo)
         - [Requirements](#requirements)
         - [Steps](#steps)
+- [Commands](#commands)
 - [Configure](#configure)
     - [Mandatory](#mandatory)
     - [Mandatory on Production](#mandatory-on-prod)
@@ -54,7 +55,7 @@ just for prototypes or small/medium projects
         "male": "boolean",
         "flags": ["string"],
         "sku": "string",
-        "product_id": "string"
+        "product_id": "uuid"
       },
       "generate": {
         "sku": "$str(4)$-$num(4)$-$sym(4)$-$str_num(4)$-$any(4)$"
@@ -89,6 +90,8 @@ Available data types
 - [x] number
 - [x] boolean
 - [x] string
+- [x] date
+- [x] time
 - [x] datetime
 - [ ] map
 - [x] list
@@ -271,6 +274,16 @@ services:
 1. Clone the repo
 2. Run `make` to download deps and build docker images (runs every time that you want to reload deps or download new ones)
 3. Run `make up` to run create the container and run in the `http://localhost:4000`
+
+## Commands
+
+The commands are to run inside the container
+
+To run the bash inside the container you need run `docker compose exec your_container_name sh`
+
+Available commands:
+
+- `make seeds`
 
 ## Configure
 

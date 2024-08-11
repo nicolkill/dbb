@@ -63,4 +63,4 @@
 - [ ] Types of schema
   - [x] Regular tables
   - [ ] Synchronized tables (for race case conditioned)
-- [ ] Random seeds to test
+- [x] Random seeds to test

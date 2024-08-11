@@ -38,8 +38,8 @@
     {
       "name": "order_product",
       "fields": {
-        "order_id": "string",
-        "product_id": "string"
+        "order_id": "uuid",
+        "product_id": "uuid"
       },
       "relations": {
         "order_id:mandatory": "orders",

@@ -5,7 +5,11 @@ defmodule Dbb.Utils do
 
   @nums "0123456789"
   @symbols "!@#$%^*()[]|'+{}"
-  @chars "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  @letters "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+  @chars "#{@letters}#{@nums}"
+
+  @spec gen_str_letters(number()) :: String.t()
+  def gen_str_letters(length), do: generate(@letters, length)
 
   @spec gen_str(number()) :: String.t()
   def gen_str(length), do: generate(@chars, length)

@@ -44,3 +44,6 @@ format:
 hub_image:
 	docker build --no-cache --build-arg MIX_ENV=prod -t ${IMAGE_TAG}:${REVISION} .
 	docker tag ${IMAGE_TAG}:${REVISION} ${IMAGE_TAG}:latest
+
+seed:
+	mix dbb.seed 10

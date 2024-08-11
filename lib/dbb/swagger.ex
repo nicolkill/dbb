@@ -15,7 +15,7 @@ defmodule Dbb.Swagger do
   defp value_example(data) when is_list(data), do: data |> Enum.map(&value_example/1)
 
   defp swg_properties(value) when value in ["number", "float"], do: %{"type" => "number"}
-  defp swg_properties("string"), do: %{"type" => "string"}
+  defp swg_properties(value) when value in ["string", "uuid"], do: %{"type" => "string"}
 
   defp swg_properties("time"),
     do: %{"type" => "string", "pattern" => "/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/"}
