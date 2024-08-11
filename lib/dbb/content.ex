@@ -54,8 +54,6 @@ defmodule Dbb.Content do
       |> Map.get(:schema)
       |> TableHandler.get_relation_schema()
 
-    #      |> IO.inspect(label: "###########")
-
     relations =
       Enum.reduce(relations, %{}, fn r, acc ->
         key = "#{r}_id"

@@ -170,16 +170,22 @@ defmodule Dbb.TableHandler do
     end
   end
 
+  defp number_purify(number) when is_bitstring(number),
+    do: String.to_integer(number)
+
+  defp number_purify(number),
+    do: number
+
   def pagination(params) do
     page =
       params
       |> Map.get("page", "0")
-      |> String.to_integer()
+      |> number_purify()
 
     count =
       params
       |> Map.get("count", "10")
-      |> String.to_integer()
+      |> number_purify()
 
     {page, count}
   end

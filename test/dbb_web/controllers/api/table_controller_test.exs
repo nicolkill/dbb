@@ -71,11 +71,11 @@ defmodule DbbWeb.TableControllerTest do
 
       assert [
                %{
-                 "data" => %{"name" => "john"},
+                 "data" => %{"name" => "John"},
                  "schema" => "users"
                },
                %{
-                 "data" => %{"name" => "jim"},
+                 "data" => %{"name" => "Jim"},
                  "schema" => "users"
                }
              ] = json_response(conn, 200)["data"]
@@ -86,11 +86,11 @@ defmodule DbbWeb.TableControllerTest do
 
       assert [
                %{
-                 "data" => %{"name" => "john"},
+                 "data" => %{"name" => "John"},
                  "schema" => "users"
                },
                %{
-                 "data" => %{"name" => "jim"},
+                 "data" => %{"name" => "Jim"},
                  "schema" => "users"
                }
              ] = json_response(conn, 200)["data"]
@@ -113,7 +113,7 @@ defmodule DbbWeb.TableControllerTest do
       assert [
                %{
                  "data" => %{
-                   "name" => "john"
+                   "name" => "John"
                  },
                  "id" => user_id,
                  "schema" => "users"
@@ -130,7 +130,7 @@ defmodule DbbWeb.TableControllerTest do
                  "relations" => %{
                    "users" => %{
                      "data" => %{
-                       "name" => "john"
+                       "name" => "John"
                      },
                      "id" => ^user_id
                    }
@@ -290,8 +290,8 @@ defmodule DbbWeb.TableControllerTest do
   end
 
   defp create_users(_) do
-    user1 = users_fixture(%{"name" => "john", "age" => 20})
-    user2 = users_fixture(%{"name" => "jim", "age" => 22})
+    user1 = users_fixture(%{"name" => "John", "age" => 20})
+    user2 = users_fixture(%{"name" => "Jim", "age" => 22})
     user3 = users_fixture(%{"name" => "mike"})
 
     %{users: [user1, user2, user3]}

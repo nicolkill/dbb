@@ -71,6 +71,37 @@
     </tr>
   </tbody>
 </table>
+
+<div class="flex border-t border-1 py-2">
+  <div class="flex-grow" />
+  <div class="gap-2">
+    <.button
+      :if={@page > 0}
+      id="first_page"
+      class="bg-blue-400 hover:bg-blue-700"
+      phx-click="first_page"
+    >
+      First page
+    </.button>
+    <.button
+      :if={@page > 0}
+      id="previous_page"
+      class="bg-blue-400 hover:bg-blue-700"
+      phx-click="previous_page"
+    >
+      Previous
+    </.button>
+    <.button
+      :if={@count == @page_records_count}
+      id="next_page"
+      class="bg-blue-400 hover:bg-blue-700"
+      phx-click="next_page"
+    >
+      Next
+    </.button>
+  </div>
+</div>
+
 <.rounded_block :if={length(@table_data) == 0}>
   Not data
 </.rounded_block>

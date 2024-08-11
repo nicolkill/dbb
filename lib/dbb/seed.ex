@@ -2,7 +2,6 @@ defmodule Dbb.Seed do
   @spec generate(integer()) :: any()
   def generate(count) do
     Schema.get_config()
-    |> IO.inspect(label: "!!!!!!!!!!!!")
     |> Map.get("schemas")
     |> Enum.map(fn %{"name" => schema_name, "fields" => fields} ->
       fields = Map.to_list(fields)

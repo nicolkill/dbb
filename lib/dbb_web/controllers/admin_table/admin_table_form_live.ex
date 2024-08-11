@@ -1,8 +1,9 @@
 defmodule DbbWeb.AdminTable.AdminTableFormLive do
   use DbbWeb, :live_view
 
+  alias Dbb.TableApi
+
   alias Dbb.Schema
-  alias Dbb.Content
   alias Dbb.Content.Table
   alias Dbb.TableHandler
   alias DbbWeb.Admin.AdminLive
@@ -13,9 +14,8 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
   @field_error_message "Is invalid value"
 
   def mount(%{"id" => _} = params, _session, socket) do
-    {schema_name, id, _} = TableHandler.validate_schema(params)
-    %Table{data: record} = db_record = Content.get_table_record!(schema_name, id)
-    schema = TableHandler.get_config_schema(schema_name)
+    {:ok, %Table{data: record} = db_record} = TableApi.show(params)
+    schema = TableHandler.get_config_schema(db_record.schema)
 
     socket =
       socket
@@ -29,12 +29,8 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
   end
 
   def mount(params, _session, socket) do
-    {schema_name, _, _} = TableHandler.validate_schema(params)
-
-    schema =
-      Schema.get_config()
-      |> Map.get("schemas")
-      |> Enum.find(&(Map.get(&1, "name") == schema_name))
+    schema_name = Map.get(params, "schema")
+    schema = TableHandler.get_config_schema(schema_name)
 
     default_record = Schema.schema_default_record(schema)
 
@@ -47,6 +43,7 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
   end
 
   def handle_event("save", _, socket) do
+    action = get_assign(socket, :action)
     schema_name = get_assign(socket, :schema_name)
     schema_fields = get_assign(socket, :schema_fields)
 
@@ -63,27 +60,19 @@ defmodule DbbWeb.AdminTable.AdminTableFormLive do
           Map.put(acc, k, v)
       end)
 
-    {_, _, {:ok, record}} =
-      TableHandler.validate_schema(%{"schema" => schema_name, "data" => record})
-
-    action = get_assign(socket, :action)
-    schema_name = get_assign(socket, :schema_name)
+    params = %{"schema" => schema_name, "data" => record}
 
     {func, args} =
       case action do
         @action_create ->
-          {:create_table_record, [schema_name, record]}
+          {:create, [params]}
 
         @action_update ->
           db_record = get_assign(socket, :db_record)
-          {:update_table_record, [db_record, record]}
+          {:update, [Map.put(params, "id", db_record.id)]}
       end
 
-    {:ok, %Table{id: id}} = apply(Content, func, args)
-
-    #    action
-    #    |> String.to_atom()
-    #    |> TableHandler.hooks(schema_name, %{}, record)
+    {:ok, %Table{id: id}} = apply(TableApi, func, args)
 
     socket =
       socket

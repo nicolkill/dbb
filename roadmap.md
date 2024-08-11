@@ -52,14 +52,14 @@
       - [ ] Link to related field
       - [ ] Scroll to load
     - [x] Create new record
-      - [ ] Call hook on action
+      - [x] Call hook on action
       - [ ] Show possible relations search on related elements
     - [x] Update record
-      - [ ] Call hook on action
+      - [x] Call hook on action
       - [ ] Show possible relations search on related elements
     - [x] Delete record
       - [ ] Force delete
-      - [ ] Call hook on action
+      - [x] Call hook on action
 - [ ] Types of schema
   - [x] Regular tables
   - [ ] Synchronized tables (for race case conditioned)
