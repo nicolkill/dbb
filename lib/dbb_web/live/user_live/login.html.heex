@@ -1,10 +1,5 @@
 <div class="">
-  <.simple_form
-    for={@form}
-    id="login-form"
-    phx-change="validate"
-    phx-submit="save"
-  >
+  <.simple_form for={@form} id="login-form" phx-change="validate" phx-submit="save">
     <div class="">
       <.input field={@form[:email]} type="text" label="Email" />
     </div>

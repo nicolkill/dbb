@@ -33,7 +33,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="user-modal" show on_cancel={JS.patch(~p"/admin/users")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="user-modal"
+  show
+  on_cancel={JS.patch(~p"/admin/users")}
+>
   <.live_component
     module={DbbWeb.UserLive.FormComponent}
     id={@user.id || :new}

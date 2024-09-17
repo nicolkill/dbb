@@ -10,6 +10,7 @@ defmodule DbbWeb.UserLive.Login do
       "email" => "",
       "password" => ""
     }
+
     socket =
       socket
       |> assign(:form, to_form(initial_data))
@@ -29,8 +30,7 @@ defmodule DbbWeb.UserLive.Login do
         user ->
           {:ok, token, _} = Guardian.encode_and_sign(user)
 
-          query_params =
-            URI.encode_query(%{"token" => token})
+          query_params = URI.encode_query(%{"token" => token})
 
           redirect(socket, to: "/login_save?#{query_params}")
       end
@@ -43,8 +43,9 @@ defmodule DbbWeb.UserLive.Login do
     params = Map.take(params, ["email", "password"])
     errors = params_errors(params)
 
-    {:noreply, socket
-               |> assign(:form, to_form(params, errors: errors))}
+    {:noreply,
+     socket
+     |> assign(:form, to_form(params, errors: errors))}
   end
 
   defp params_errors(params) do
@@ -57,9 +58,9 @@ defmodule DbbWeb.UserLive.Login do
         else
           [{:email, {"invalid email", []}}]
         end
+
       _ ->
         []
     end)
   end
-
 end

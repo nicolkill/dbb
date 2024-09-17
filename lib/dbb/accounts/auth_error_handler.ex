@@ -1,5 +1,4 @@
 defmodule Dbb.Accounts.AuthErrorHandler do
-
   @behaviour Guardian.Plug.ErrorHandler
 
   @impl Guardian.Plug.ErrorHandler
@@ -8,6 +7,7 @@ defmodule Dbb.Accounts.AuthErrorHandler do
       case data do
         {:already_authenticated, _} ->
           "/admin"
+
         _ ->
           "/login"
       end

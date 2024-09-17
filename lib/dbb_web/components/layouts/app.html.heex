@@ -12,13 +12,15 @@
         url: "/admin/users",
         class: "bg-yellow-400 hover:bg-yellow-600 text-black"
       }
-    ] ++ Dbb.Utils.schemas_menu_list() ++ [
-      %{
-        text: "Logout",
-        url: "/admin/logout",
-        class: "bg-red-400 hover:bg-red-600 text-black"
-      }
-    ]
+    ] ++
+      Dbb.Utils.schemas_menu_list() ++
+      [
+        %{
+          text: "Logout",
+          url: "/admin/logout",
+          class: "bg-red-400 hover:bg-red-600 text-black"
+        }
+      ]
   }
 />
 <main class="px-4 py-20 sm:px-6 lg:px-8">

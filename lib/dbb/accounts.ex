@@ -52,6 +52,7 @@ defmodule Dbb.Accounts do
 
   """
   def create_user(attrs \\ %{})
+
   def create_user(%{"password" => password} = attrs) do
     attrs = Map.put(attrs, "password", hash_password(password))
 
@@ -132,8 +133,8 @@ defmodule Dbb.Accounts do
   end
 
   defp verify_password(nil, _),
-       do: nil
-  
+    do: nil
+
   defp verify_password(%User{} = user, password) do
     if Bcrypt.verify_pass(password, user.password) do
       user

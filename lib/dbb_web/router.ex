@@ -12,6 +12,7 @@ defmodule DbbWeb.Router do
     plug Guardian.Plug.Pipeline,
       module: Dbb.Accounts.Guardian,
       error_handler: Dbb.Accounts.AuthErrorHandler
+
     plug Guardian.Plug.VerifySession, claims: %{"typ" => "access"}
     plug Guardian.Plug.EnsureNotAuthenticated
   end
@@ -27,6 +28,7 @@ defmodule DbbWeb.Router do
     plug Guardian.Plug.Pipeline,
       module: Dbb.Accounts.Guardian,
       error_handler: Dbb.Accounts.AuthErrorHandler
+
     plug Guardian.Plug.VerifySession, claims: %{"typ" => "access"}
     plug Guardian.Plug.EnsureAuthenticated
     plug Guardian.Plug.LoadResource

@@ -29,7 +29,8 @@ defmodule Dbb.ContentTest do
     end
 
     test "create_table/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Content.create_table_record("user_accounts", @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} =
+               Content.create_table_record("user_accounts", @invalid_attrs)
     end
 
     test "update_table/2 with valid data updates the user_accounts" do
@@ -51,7 +52,10 @@ defmodule Dbb.ContentTest do
     test "delete_table/1 deletes the user_accounts" do
       user = users_fixture()
       assert {:ok, %Table{}} = Content.delete_table_record(user)
-      assert_raise Ecto.NoResultsError, fn -> Content.get_table_record!("user_accounts", user.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Content.get_table_record!("user_accounts", user.id)
+      end
     end
 
     test "change_table/1 returns a user_accounts changeset" do

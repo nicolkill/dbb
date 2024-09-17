@@ -8,7 +8,13 @@ defmodule Dbb.AccountsTest do
 
     import Dbb.AccountsFixtures
 
-    @invalid_attrs %{email: "invalid_mail", first_name: nil, last_name: nil, password: "invalid", username: nil}
+    @invalid_attrs %{
+      email: "invalid_mail",
+      first_name: nil,
+      last_name: nil,
+      password: "invalid",
+      username: nil
+    }
 
     test "list_users/0 returns all users" do
       user = user_fixture()
@@ -43,6 +49,7 @@ defmodule Dbb.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
+
       update_attrs = %{
         email: "email_updated@example.com",
         first_name: "some updated first_name",
@@ -77,18 +84,22 @@ defmodule Dbb.AccountsTest do
 
     test "login_email/2 returns the user with correct password" do
       password = "my_password"
+
       user =
         %{password: password}
         |> user_fixture()
+
       assert %User{email: email} = Accounts.login_email(user.email, password)
       assert user.email == email
     end
 
     test "login_username/2 returns the user with correct password" do
       password = "my_password"
+
       user =
         %{password: password}
         |> user_fixture()
+
       assert %User{email: email} = Accounts.login_username(user.username, password)
       assert user.email == email
     end

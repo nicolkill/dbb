@@ -18,7 +18,12 @@
 
 <.back navigate={~p"/admin/users"}>Back to users</.back>
 
-<.modal :if={@live_action == :edit} id="user-modal" show on_cancel={JS.patch(~p"/admin/users/#{@user}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="user-modal"
+  show
+  on_cancel={JS.patch(~p"/admin/users/#{@user}")}
+>
   <.live_component
     module={DbbWeb.UserLive.FormComponent}
     id={@user.id}
