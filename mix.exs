@@ -52,7 +52,10 @@ defmodule Dbb.MixProject do
       {:hackney, "~> 1.17"},
       {:map_schema_validator, "~> 0.1.7"},
       {:phoenix_swagger, "~> 0.8"},
-      {:ex_json_schema, "~> 0.5"}
+      {:ex_json_schema, "~> 0.5"},
+      {:guardian, "~> 2.3"},
+      {:bcrypt_elixir, "~> 3.0"},
+      {:troll_bridge, "~> 0.1.0"}
     ]
   end
 

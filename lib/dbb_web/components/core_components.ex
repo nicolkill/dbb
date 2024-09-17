@@ -231,6 +231,7 @@ defmodule DbbWeb.CoreComponents do
       class={[
         "phx-submit-loading:opacity-75 rounded py-1 px-2",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "bg-blue-400 hover:bg-blue-600",
         @class
       ]}
       {@rest}

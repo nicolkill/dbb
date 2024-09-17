@@ -36,7 +36,7 @@ defmodule DbbWeb.TableControllerTest do
 
   describe "index" do
     test "lists all users", %{conn: conn} do
-      conn = get(conn, "/api/v1/users")
+      conn = get(conn, "/api/v1/user_accounts")
       assert json_response(conn, 200)["data"] == []
     end
   end
@@ -45,70 +45,70 @@ defmodule DbbWeb.TableControllerTest do
     setup [:create_users, :create_product, :create_order]
 
     test "lists all users", %{conn: conn} do
-      conn = get(conn, "/api/v1/users?page=1&count=2")
+      conn = get(conn, "/api/v1/user_accounts?page=1&count=2")
 
       assert [
                %{
                  "data" => %{"name" => "mike"},
-                 "schema" => "users"
+                 "schema" => "user_accounts"
                }
              ] = json_response(conn, 200)["data"]
     end
 
     test "lists all users using null filter", %{conn: conn} do
-      conn = get(conn, "/api/v1/users?q=age:null")
+      conn = get(conn, "/api/v1/user_accounts?q=age:null")
 
       assert [
                %{
                  "data" => %{"name" => "mike"},
-                 "schema" => "users"
+                 "schema" => "user_accounts"
                }
              ] = json_response(conn, 200)["data"]
     end
 
     test "lists all users using not null filter", %{conn: conn} do
-      conn = get(conn, "/api/v1/users?q=age:not_null")
+      conn = get(conn, "/api/v1/user_accounts?q=age:not_null")
 
       assert [
                %{
                  "data" => %{"name" => "John"},
-                 "schema" => "users"
+                 "schema" => "user_accounts"
                },
                %{
                  "data" => %{"name" => "Jim"},
-                 "schema" => "users"
+                 "schema" => "user_accounts"
                }
              ] = json_response(conn, 200)["data"]
     end
 
     test "lists all users that starts with the letter 'j'", %{conn: conn} do
-      conn = get(conn, "/api/v1/users?q=name:j")
+      conn = get(conn, "/api/v1/user_accounts?q=name:j")
 
       assert [
                %{
                  "data" => %{"name" => "John"},
-                 "schema" => "users"
+                 "schema" => "user_accounts"
                },
                %{
                  "data" => %{"name" => "Jim"},
-                 "schema" => "users"
+                 "schema" => "user_accounts"
                }
              ] = json_response(conn, 200)["data"]
     end
 
     test "lists all users that starts with the word 'mike'", %{conn: conn} do
-      conn = get(conn, "/api/v1/users?q=name:mike")
+      conn = get(conn, "/api/v1/user_accounts?q=name:mike")
 
       assert [
                %{
                  "data" => %{"name" => "mike"},
-                 "schema" => "users"
+                 "schema" => "user_accounts"
                }
              ] = json_response(conn, 200)["data"]
     end
 
     test "lists all users that starts with the word 'john' and preload relations", %{conn: conn} do
-      conn = get(conn, "/api/v1/users?q=name:john")
+      conn = get(conn, "/api/v1/user_accounts?q=name:john")
 
       assert [
                %{
@@ -116,7 +116,7 @@ defmodule DbbWeb.TableControllerTest do
                    "name" => "John"
                  },
                  "id" => user_id,
-                 "schema" => "users"
+                 "schema" => "user_accounts"
                }
              ] = json_response(conn, 200)["data"]
 
@@ -128,7 +128,7 @@ defmodule DbbWeb.TableControllerTest do
                    "user_id" => ^user_id
                  },
                  "relations" => %{
-                   "users" => %{
+                   "user_accounts" => %{
                      "data" => %{
                        "name" => "John"
                      },
@@ -149,11 +149,11 @@ defmodule DbbWeb.TableControllerTest do
           %Tesla.Env{status: 200, url: "https://someurl.test/webhook", body: %{"status" => "Ok"}}
       end)
 
-      conn = post(conn, ~p"/api/v1/users", data: @user_create_attrs)
+      conn = post(conn, ~p"/api/v1/user_accounts", data: @user_create_attrs)
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, ~p"/api/v1/users/#{id}")
+      conn = get(conn, ~p"/api/v1/user_accounts/#{id}")
 
       assert %{
                "id" => ^id,
@@ -164,12 +164,12 @@ defmodule DbbWeb.TableControllerTest do
                  "name" => "Pancracio",
                  "flags" => ["flag-1", "flag-2"]
                },
-               "schema" => "users"
+               "schema" => "user_accounts"
              } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/api/v1/users", data: @user_invalid_attrs)
+      conn = post(conn, ~p"/api/v1/user_accounts", data: @user_invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -209,10 +209,10 @@ defmodule DbbWeb.TableControllerTest do
     test "renders users when data is valid", %{conn: conn, users: [user | _]} do
       %Table{id: id} = user
 
-      conn = put(conn, ~p"/api/v1/users/#{user}", data: @user_update_attrs)
+      conn = put(conn, ~p"/api/v1/user_accounts/#{user}", data: @user_update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get(conn, ~p"/api/v1/users/#{id}")
+      conn = get(conn, ~p"/api/v1/user_accounts/#{id}")
 
       assert %{
                "id" => ^id,
@@ -221,13 +221,13 @@ defmodule DbbWeb.TableControllerTest do
                  "name" => "Pancracio Jr",
                  "flags" => ["flag-3"]
                },
-               "schema" => "users"
+               "schema" => "user_accounts"
              } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, users: users} do
       user = Enum.at(users, 0)
-      conn = put(conn, ~p"/api/v1/users/#{user}", data: @user_invalid_attrs)
+      conn = put(conn, ~p"/api/v1/user_accounts/#{user}", data: @user_invalid_attrs)
 
       assert json_response(conn, 422)["errors"] != %{}
     end
@@ -280,11 +280,11 @@ defmodule DbbWeb.TableControllerTest do
 
     test "deletes chosen user", %{conn: conn, users: users} do
       user = Enum.at(users, 0)
-      conn = delete(conn, ~p"/api/v1/users/#{user}")
+      conn = delete(conn, ~p"/api/v1/user_accounts/#{user}")
       assert response(conn, 204)
 
       assert_error_sent 404, fn ->
-        get(conn, ~p"/api/v1/users/#{user}")
+        get(conn, ~p"/api/v1/user_accounts/#{user}")
       end
     end
   end

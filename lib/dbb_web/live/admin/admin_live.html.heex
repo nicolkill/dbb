@@ -3,7 +3,7 @@
 <.rounded_block class="bg-gray-100 p-4">
   <div class="flex gap-4">
     <div :for={schema <- @schemas}>
-      <.button_link navigate={"/#{schema}"} class="bg-gray-300 hover:bg-gray-400">
+      <.button_link navigate={"/admin/#{schema}"} class="bg-gray-300 hover:bg-gray-400">
         <%= Dbb.Utils.capitalize_snake_case(schema) %>
       </.button_link>
     </div>

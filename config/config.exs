@@ -53,6 +53,10 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 config :tesla, adapter: Tesla.Adapter.Hackney
 
+config :dbb, Dbb.Accounts.Guardian,
+  issuer: "dbb",
+  secret_key: System.get_env("AUTH_SECRET_KEY") || "TFPxxJeL3/cLiv46/1kCCciZHsuwa8JAmY2klZkMixEsVC7kfg8j3oWHhUz6HOBq"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

@@ -16,7 +16,7 @@ defmodule Dbb.ContentFixtures do
         "flags" => ["super-flag"]
       })
 
-    {:ok, table} = Dbb.Content.create_table_record("users", attrs)
+    {:ok, table} = Dbb.Content.create_table_record("user_accounts", attrs)
 
     table
   end

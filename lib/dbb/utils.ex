@@ -47,7 +47,7 @@ defmodule Dbb.Utils do
     |> Enum.map(
       &%{
         text: Map.get(&1, "name"),
-        url: "/#{Map.get(&1, "name")}"
+        url: "/admin/#{Map.get(&1, "name")}"
       }
     )
   end
@@ -64,4 +64,18 @@ defmodule Dbb.Utils do
 
   defp capitalize_tokens(data) when is_bitstring(data),
     do: data |> String.split("_") |> Enum.map(&String.capitalize/1)
+
+  def purify_params(params) when is_map(params) and not is_struct(params) do
+    params
+    |> Map.to_list()
+    |> Enum.reduce(%{}, fn {key, value}, acc ->
+      Map.put(acc, to_string(key), purify_params(value))
+    end)
+  end
+
+  def purify_params(params), do: params
+
+  def validate_email(email) when is_binary(email) do
+    Regex.match?(~r/(\w+)@([\w.]+)/, email)
+  end
 end

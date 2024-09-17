@@ -1,0 +1,18 @@
+<div class="">
+  <.simple_form
+    for={@form}
+    id="login-form"
+    phx-change="validate"
+    phx-submit="save"
+  >
+    <div class="">
+      <.input field={@form[:email]} type="text" label="Email" />
+    </div>
+    <div class="mt-2">
+      <.input field={@form[:password]} type="password" label="Password" />
+    </div>
+    <:actions>
+      <.button phx-disable-with="Login in...">Login</.button>
+    </:actions>
+  </.simple_form>
+</div>

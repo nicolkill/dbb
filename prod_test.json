@@ -4,7 +4,7 @@
   },
   "schemas": [
     {
-      "name": "users",
+      "name": "user_accounts",
       "fields": {
         "email": "string",
         "name": "string",
@@ -32,7 +32,7 @@
         "estimated_delivery_time": "datetime"
       },
       "relations": {
-        "user_id:mandatory": "users"
+        "user_id:mandatory": "user_accounts"
       }
     },
     {

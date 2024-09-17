@@ -21,7 +21,7 @@ image:
 	docker tag ${IMAGE_TAG_DEV}:${REVISION} ${IMAGE_TAG_DEV}:latest
 
 testing:
-	docker compose exec app sh -c 'MIX_ENV=test mix test'
+	docker compose exec app sh -c 'MIX_ENV=test mix test --timeout 3000'
 
 iex:
 	docker compose exec app iex -S mix
@@ -44,6 +44,9 @@ format:
 hub_image:
 	docker build --no-cache --build-arg MIX_ENV=prod -t ${IMAGE_TAG}:${REVISION} .
 	docker tag ${IMAGE_TAG}:${REVISION} ${IMAGE_TAG}:latest
+
+user_seeds:
+	docker compose exec app mix run priv/repo/seeds.exs
 
 seed:
 	mix dbb.seed 10

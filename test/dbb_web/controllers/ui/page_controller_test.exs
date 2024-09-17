@@ -5,8 +5,10 @@ defmodule DbbWeb.Page.PageControllerTest do
   import Dbb.ContentFixtures
 
   describe "GET /users" do
+    setup [:create_user_to_login, :login]
+
     test "show empty state screen", %{conn: conn} do
-      {:ok, view, _html} = live(conn, ~p"/users")
+      {:ok, view, _html} = live(conn, ~p"/admin/user_accounts")
 
       view = element(view, "span.block.w-full.bg-gray-100")
 
@@ -15,7 +17,7 @@ defmodule DbbWeb.Page.PageControllerTest do
 
     test "show users data", %{conn: conn} do
       %{users: [user | _rest]} = create_users(nil)
-      {:ok, view, _html} = live(conn, ~p"/users")
+      {:ok, view, _html} = live(conn, ~p"/admin/user_accounts")
 
       view = element(view, "table.table-auto.w-full tbody tr:first-child()")
 
@@ -24,7 +26,7 @@ defmodule DbbWeb.Page.PageControllerTest do
 
     #    test "handles delete on UI", %{conn: conn} do
     #      %{users: [user | _rest]} = create_users(nil)
-    #      {:ok, view, _html} = live(conn, ~p"/users")
+    #      {:ok, view, _html} = live(conn, ~p"/admin/user_accounts")
     #
     #      view
     #      |> element("table.table-auto.w-full tbody tr button#delete_#{user.id}_button")
@@ -38,7 +40,7 @@ defmodule DbbWeb.Page.PageControllerTest do
 
     test "handles edit redirect", %{conn: conn} do
       %{users: [user | _rest]} = create_users(nil)
-      {:ok, view, _html} = live(conn, ~p"/users")
+      {:ok, view, _html} = live(conn, ~p"/admin/user_accounts")
 
       {:ok, view, _html} =
         view

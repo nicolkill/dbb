@@ -17,6 +17,8 @@ defmodule DbbWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias Dbb.Accounts.Guardian
+
   using do
     quote do
       # The default endpoint for testing
@@ -34,5 +36,23 @@ defmodule DbbWeb.ConnCase do
   setup tags do
     Dbb.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
+  end
+
+  def password, do: "some_password"
+
+  def create_user_to_login(_) do
+    user = Dbb.AccountsFixtures.user_fixture(password: password())
+    %{user: user}
+  end
+
+  def login(%{conn: conn, user: resource}) do
+    {:ok, guardian_default_token, claims} = Guardian.encode_and_sign(resource)
+
+    conn =
+      conn
+      |> Guardian.Plug.sign_in(resource, claims)
+      |> Plug.Test.init_test_session(guardian_default_token: guardian_default_token)
+
+    %{conn: conn}
   end
 end

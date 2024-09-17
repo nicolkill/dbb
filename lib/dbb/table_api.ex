@@ -2,6 +2,7 @@ defmodule Dbb.TableApi do
   alias Dbb.TableHandler
   alias Dbb.Content
   alias Dbb.Content.Table
+  alias Dbb.Utils
 
   @type index_r :: %{
           schema: String.t(),
@@ -57,7 +58,7 @@ defmodule Dbb.TableApi do
   """
   @spec index(index_r()) :: index_res()
   def index(params, call_hook? \\ false) do
-    params = purify_params(params)
+    params = Utils.purify_params(params)
     {schema, _, _} = TableHandler.validate_schema(params)
     {page, count} = TableHandler.pagination(params)
     query = TableHandler.search(params)
@@ -88,7 +89,7 @@ defmodule Dbb.TableApi do
   """
   @spec show(show_delete_r()) :: {:ok, Table.t()}
   def show(params, call_hook? \\ false) do
-    params = purify_params(params)
+    params = Utils.purify_params(params)
     {schema, id, _} = TableHandler.validate_schema(params)
     relations = TableHandler.relations(params)
 
@@ -114,7 +115,7 @@ defmodule Dbb.TableApi do
   """
   @spec create(create_r()) :: upsert_res()
   def create(params, call_hook? \\ false) do
-    params = purify_params(params)
+    params = Utils.purify_params(params)
 
     with {schema, _, {:ok, data}} <- TableHandler.validate_schema(params),
          {:ok, %Table{} = table_record} <- Content.create_table_record(schema, data) do
@@ -141,7 +142,7 @@ defmodule Dbb.TableApi do
   """
   @spec update(update_r()) :: upsert_res()
   def update(params, call_hook? \\ false) do
-    params = purify_params(params)
+    params = Utils.purify_params(params)
 
     with {schema, id, {:ok, data}} <- TableHandler.validate_schema(params),
          table_record <- Content.get_table_record!(schema, id),
@@ -175,14 +176,4 @@ defmodule Dbb.TableApi do
       true
     end
   end
-
-  defp purify_params(params) when is_map(params) and not is_struct(params) do
-    params
-    |> Map.to_list()
-    |> Enum.reduce(%{}, fn {key, value}, acc ->
-      Map.put(acc, to_string(key), purify_params(value))
-    end)
-  end
-
-  defp purify_params(params), do: params
 end
