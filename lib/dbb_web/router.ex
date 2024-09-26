@@ -65,7 +65,7 @@ defmodule DbbWeb.Router do
     end
   end
 
-#  todo: add docs to add the default admin, add permissions to the admin and hide buttons for those admins
+  #  todo: add docs to add the default admin, add permissions to the admin and hide buttons for those admins
 
   scope "/api/v1", DbbWeb do
     pipe_through :api

@@ -8,7 +8,11 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
   @page_records_count 10
 
   @impl true
-  def mount(params, _session, %{assigns: %{structured_permissions: structured_permissions}} = socket) do
+  def mount(
+        params,
+        _session,
+        %{assigns: %{structured_permissions: structured_permissions}} = socket
+      ) do
     schema_name = Map.get(params, "schema")
     schema = TableHandler.get_config_schema(schema_name)
 
@@ -122,8 +126,8 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
   end
 
   defp can_show_action?(structured_permissions, schema_name, permission) do
-    TrollBridge.allowed?(structured_permissions, "admin", "all") or 
-    TrollBridge.allowed?(structured_permissions, schema_name, "all") or 
-    TrollBridge.allowed?(structured_permissions, schema_name, permission)
+    TrollBridge.allowed?(structured_permissions, "admin", "all") or
+      TrollBridge.allowed?(structured_permissions, schema_name, "all") or
+      TrollBridge.allowed?(structured_permissions, schema_name, permission)
   end
 end

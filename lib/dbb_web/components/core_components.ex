@@ -612,10 +612,7 @@ defmodule DbbWeb.CoreComponents do
       <div class="border-b border-gray-300 py-3 px-8 text-sm">
         <div class="mx-auto max-w-4xl flex items-center justify-between ">
           <div class="flex items-center gap-4">
-            <a
-              href="/admin"
-              class="font-bold text-lg"
-            >
+            <a href="/admin" class="font-bold text-lg">
               <%= @title %>
             </a>
           </div>

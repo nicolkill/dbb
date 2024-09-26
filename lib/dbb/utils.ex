@@ -49,7 +49,11 @@ defmodule Dbb.Utils do
 
     Dbb.Schema.get_config()
     |> Map.get("schemas")
-    |> Enum.filter(&(TrollBridge.allowed?(structured_permissions, "admin", "all") or TrollBridge.allowed?(structured_permissions, Map.get(&1, "name"), "all") or TrollBridge.allowed?(structured_permissions, Map.get(&1, "name"), "index")))
+    |> Enum.filter(
+      &(TrollBridge.allowed?(structured_permissions, "admin", "all") or
+          TrollBridge.allowed?(structured_permissions, Map.get(&1, "name"), "all") or
+          TrollBridge.allowed?(structured_permissions, Map.get(&1, "name"), "index"))
+    )
     |> Enum.map(
       &%{
         text: Map.get(&1, "name"),

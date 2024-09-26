@@ -143,5 +143,4 @@ defmodule Dbb.Schema do
       Map.put(acc, name, permissions)
     end)
   end
-
 end

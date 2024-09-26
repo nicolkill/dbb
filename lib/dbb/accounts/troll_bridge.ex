@@ -41,7 +41,7 @@ defmodule Dbb.Accounts.TrollBridge do
 
       role, acc ->
         [scope, permission] = String.split(role, ".")
-        permissions =  Map.get(acc, scope, [])
+        permissions = Map.get(acc, scope, [])
         Map.put(acc, scope, permissions ++ [permission])
     end)
   end

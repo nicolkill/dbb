@@ -10,7 +10,10 @@ defmodule DbbWeb.LiveSession do
     socket =
       socket
       |> assign(:current_user, current_user)
-      |> assign(:structured_permissions, LocalTrollBridge.roles_to_permissions(current_user.roles))
+      |> assign(
+        :structured_permissions,
+        LocalTrollBridge.roles_to_permissions(current_user.roles)
+      )
 
     {:cont, socket}
   end

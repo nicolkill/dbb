@@ -8,7 +8,10 @@ defmodule DbbWeb.Admin.AdminLive do
       Schema.get_config()
       |> Map.get("schemas")
       |> Enum.map(&Map.get(&1, "name"))
-      |> Enum.filter(&(TrollBridge.allowed?(roles, "admin", "all") or TrollBridge.allowed?(roles, &1, "all") or TrollBridge.allowed?(roles, &1, "index")))
+      |> Enum.filter(
+        &(TrollBridge.allowed?(roles, "admin", "all") or TrollBridge.allowed?(roles, &1, "all") or
+            TrollBridge.allowed?(roles, &1, "index"))
+      )
 
     {:ok, assign(socket, :schemas, schemas)}
   end

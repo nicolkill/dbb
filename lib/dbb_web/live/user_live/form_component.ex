@@ -130,7 +130,7 @@ defmodule DbbWeb.UserLive.FormComponent do
   defp roles_format(permissions_params) do
     permissions_params
     |> Map.to_list()
-    |> Enum.flat_map(&(if elem(&1, 1) == "true", do: [elem(&1, 0)], else: []))
+    |> Enum.flat_map(&if elem(&1, 1) == "true", do: [elem(&1, 0)], else: [])
   end
 
   defp has_permission?(roles, permission) do
