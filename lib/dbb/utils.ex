@@ -3,6 +3,8 @@ defmodule Dbb.Utils do
   Utilities for the system
   """
 
+  alias Dbb.Accounts.User
+
   @nums "0123456789"
   @symbols "!@#$%^*()[]|'+{}"
   @letters "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -40,10 +42,14 @@ defmodule Dbb.Utils do
     |> Map.get("title", "dbb")
   end
 
-  @spec schemas_menu_list() :: list(String.t())
-  def schemas_menu_list() do
+  @spec schemas_menu_list(User.t()) :: list(String.t())
+  def schemas_menu_list(structured_permissions) do
+    structured_permissions
+    |> IO.inspect(label: "############ structured_permissions")
+
     Dbb.Schema.get_config()
     |> Map.get("schemas")
+    |> Enum.filter(&(TrollBridge.allowed?(structured_permissions, "admin", "all") or TrollBridge.allowed?(structured_permissions, Map.get(&1, "name"), "all") or TrollBridge.allowed?(structured_permissions, Map.get(&1, "name"), "index")))
     |> Enum.map(
       &%{
         text: Map.get(&1, "name"),

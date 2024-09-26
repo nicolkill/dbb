@@ -8,19 +8,24 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
   @page_records_count 10
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(params, _session, %{assigns: %{structured_permissions: structured_permissions}} = socket) do
     schema_name = Map.get(params, "schema")
-
     schema = TableHandler.get_config_schema(schema_name)
 
     socket =
-      socket
-      |> assign(:schema_name, schema_name)
-      |> assign(:schema_fields, Map.get(schema, "fields"))
-      |> assign(:schema_hooks, Map.get(schema, "hooks"))
-      |> load_data(0)
-      |> assign(:to_delete, nil)
-      |> assign(:page_records_count, @page_records_count)
+      if can_show_action?(structured_permissions, schema_name, "index") do
+        socket
+        |> assign(:schema_name, schema_name)
+        |> assign(:schema_fields, Map.get(schema, "fields"))
+        |> assign(:schema_hooks, Map.get(schema, "hooks"))
+        |> load_data(0)
+        |> assign(:to_delete, nil)
+        |> assign(:page_records_count, @page_records_count)
+      else
+        socket
+        |> put_flash(:error, "Access Denied")
+        |> redirect(to: ~p"/admin")
+      end
 
     {:ok, socket}
   end
@@ -114,5 +119,11 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
       _ ->
         value
     end
+  end
+
+  defp can_show_action?(structured_permissions, schema_name, permission) do
+    TrollBridge.allowed?(structured_permissions, "admin", "all") or 
+    TrollBridge.allowed?(structured_permissions, schema_name, "all") or 
+    TrollBridge.allowed?(structured_permissions, schema_name, permission)
   end
 end

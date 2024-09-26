@@ -17,7 +17,7 @@ defmodule Dbb.Accounts.User do
     field :last_name, :string
     field :password, :string
     field :username, :string
-    field :roles, {:array, :string}
+    field :roles, {:array, :string}, default: []
 
     # soft delete field
     field :deleted_at, :naive_datetime

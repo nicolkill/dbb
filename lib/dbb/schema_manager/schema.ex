@@ -130,4 +130,18 @@ defmodule Dbb.Schema do
       Map.put(acc, key, default_value(type))
     end)
   end
+
+  def schema_roles_base(), do: schema_roles_generate()
+
+  def schema_roles(), do: schema_roles_generate(Dbb.Accounts.TrollBridge.actions())
+
+  defp schema_roles_generate(permissions \\ []) do
+    get_config()
+    |> Map.get("schemas", [])
+    |> Enum.reduce(%{}, fn schema, acc ->
+      name = Map.get(schema, "name")
+      Map.put(acc, name, permissions)
+    end)
+  end
+
 end

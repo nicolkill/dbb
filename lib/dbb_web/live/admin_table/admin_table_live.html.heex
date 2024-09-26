@@ -7,6 +7,7 @@
   <div class="grow"></div>
   <div class="flex-none">
     <.button_link
+      :if={can_show_action?(@structured_permissions, @schema_name, "create")}
       class="bg-teal-400 hover:bg-teal-700"
       navigate={DbbWeb.Admin.AdminLive.link(:create, @schema_name)}
     >
@@ -52,6 +53,7 @@
       <td id={"field_options_#{row.id}"}>
         <div class="flex gap-1">
           <.button_link
+            :if={can_show_action?(@structured_permissions, @schema_name, "edit")}
             id={"edit_#{row.id}_button"}
             class="bg-blue-400 hover:bg-blue-700"
             navigate={DbbWeb.Admin.AdminLive.link(:update, @schema_name, row.id)}
@@ -59,6 +61,7 @@
             Edit
           </.button_link>
           <.button
+            :if={can_show_action?(@structured_permissions, @schema_name, "delete")}
             id={"delete_#{row.id}_button"}
             class="bg-red-400 hover:bg-red-700"
             phx-click={JS.push("delete") |> show_modal("confirm-modal")}

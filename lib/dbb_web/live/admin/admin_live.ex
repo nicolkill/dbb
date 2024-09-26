@@ -1,11 +1,14 @@
 defmodule DbbWeb.Admin.AdminLive do
   use DbbWeb, :live_view
 
-  def mount(_params, _session, socket) do
+  alias Dbb.Schema
+
+  def mount(_params, _session, %{assigns: %{structured_permissions: roles}} = socket) do
     schemas =
-      Dbb.Schema.get_config()
+      Schema.get_config()
       |> Map.get("schemas")
       |> Enum.map(&Map.get(&1, "name"))
+      |> Enum.filter(&(TrollBridge.allowed?(roles, "admin", "all") or TrollBridge.allowed?(roles, &1, "all") or TrollBridge.allowed?(roles, &1, "index")))
 
     {:ok, assign(socket, :schemas, schemas)}
   end
