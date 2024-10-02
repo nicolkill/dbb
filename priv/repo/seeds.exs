@@ -13,5 +13,6 @@
 Dbb.Accounts.create_user(%{
   "username" => "admin",
   "email" => "admin@admin.com",
-  "password" => "pass"
+  "password" => "pass",
+  "roles" => ["all"]
 })

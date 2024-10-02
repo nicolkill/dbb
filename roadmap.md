@@ -7,7 +7,10 @@
     - [x] Cors
   - [x] AdminUI
     - [x] Custom title for UI
-    - [x] Login with username/password
+    - [x] Admin Users
+      - [x] Edit Permissions
+      - [x] Block/Allow access by permissions
+      - [x] Instructions to start the default admin user
 - [x] Swagger
 - [x] CRUD
 - [ ] Valid types on Schema

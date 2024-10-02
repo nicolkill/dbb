@@ -8,8 +8,6 @@ defmodule Dbb.Accounts do
 
   alias Dbb.Accounts.User
 
-  defp salt, do: Application.get_env(:dbb, Dbb.Accounts.Guardian)[:auth_salt]
-
   @doc """
   Returns the list of users.
 
@@ -38,6 +36,12 @@ defmodule Dbb.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  def get_user_by_email(email) do
+    User
+    |> where(email: ^email)
+    |> Repo.one()
+  end
 
   @doc """
   Creates a user.

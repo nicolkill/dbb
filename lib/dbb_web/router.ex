@@ -44,6 +44,7 @@ defmodule DbbWeb.Router do
 
     live "/login", UserLive.Login, :index
     get "/login_save", AccountController, :login
+    live "/admin/setup", SetupLive.Index, :index
   end
 
   scope "/admin", DbbWeb do

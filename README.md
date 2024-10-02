@@ -214,6 +214,19 @@ GET /api/v1/:schema?relations=relation_1,relation_2
 
 To open the Swagger UI just go to the path `api_docs/v1` or click on the link in the UI and it's ready to use
 
+## Admin
+
+To use the admin you need open on browser `/admin/setup` and click on the `Start` button
+
+This action will create the admin default user for admin, open on browser `/login` and use the next credentials to login
+
+```
+admin@admin.com
+pass
+```
+
+And then you can go to the admin users and create the other ones with specific permissions
+
 ## How to run:
 
 ### Using docker image
@@ -313,8 +326,6 @@ The schema config exists on his own file, but the server it's configured by env 
 |---|---|---|---|
 | PORT | integer | 4000 | Port number, just for dev |
 | ALLOWED_API_KEY | string | | Static API Key to secure calls on API CRUD |
-| ADMIN_AUTH_USERNAME | string | | Static login username to Admin |
-| ADMIN_AUTH_PASSWORD | string | | Static login password to Admin |
 | POOL_SIZE | integer | 10 | Database postgres pool size |
 
 > In case that prod deployment, the port it's `443` (https) and the port it's for standart calls, but this will be
