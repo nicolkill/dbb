@@ -3,7 +3,7 @@ defmodule DbbWeb.SetupLive.Index do
 
   alias Dbb.Accounts
 
-  @default_admin_email "admin2@admin.com"
+  @default_admin_email "admin@admin.com"
 
   @impl true
   def mount(_params, _session, socket) do
@@ -17,7 +17,7 @@ defmodule DbbWeb.SetupLive.Index do
   end
 
   @impl true
-  def handle_event("delete", _, socket) do
+  def handle_event("start_setup", _, socket) do
     {:ok, _} =
       Accounts.create_user(%{
         "username" => "admin",
@@ -26,7 +26,7 @@ defmodule DbbWeb.SetupLive.Index do
         "roles" => ["all"]
       })
 
-    {:noreply, socket}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
   
 end

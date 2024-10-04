@@ -41,7 +41,7 @@ defmodule DbbWeb.ConnCase do
   def password, do: "some_password"
 
   def create_user_to_login(_) do
-    user = Dbb.AccountsFixtures.user_fixture(password: password())
+    user = Dbb.AccountsFixtures.user_fixture(password: password(), roles: ["all"])
     %{user: user}
   end
 

@@ -7,17 +7,15 @@ defmodule DbbWeb.UserLiveTest do
     email: "email@example.com",
     first_name: "some first_name",
     last_name: "some last_name",
-    password: "some password",
     username: "some username"
   }
   @update_attrs %{
     email: "email_updated@example.com",
     first_name: "some updated first_name",
     last_name: "some updated last_name",
-    password: "some updated password",
     username: "some updated username"
   }
-  @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password: nil, username: nil}
+  @invalid_attrs %{email: nil, first_name: nil, last_name: nil, username: nil}
 
   describe "Login" do
     setup [:create_user_to_login]
@@ -49,7 +47,7 @@ defmodule DbbWeb.UserLiveTest do
   describe "Logout" do
     setup [:create_user_to_login, :login]
 
-    test "performs logout", %{conn: conn, user: user} do
+    test "performs logout", %{conn: conn} do
       conn = get(conn, ~p"/admin/logout")
 
       assert "/login" =~ redirected_to(conn)

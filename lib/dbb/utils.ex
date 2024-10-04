@@ -44,9 +44,6 @@ defmodule Dbb.Utils do
 
   @spec schemas_menu_list(User.t()) :: list(String.t())
   def schemas_menu_list(structured_permissions) do
-    structured_permissions
-    |> IO.inspect(label: "############ structured_permissions")
-
     Dbb.Schema.get_config()
     |> Map.get("schemas")
     |> Enum.filter(
