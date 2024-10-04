@@ -9,7 +9,6 @@ defmodule DbbWeb.SetupLiveTest do
   alias Dbb.AccountsFixtures
 
   describe "Login" do
-
     test "redirects to login", %{conn: conn} do
       AccountsFixtures.user_fixture(%{"email" => @default_admin_email})
 

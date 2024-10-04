@@ -28,5 +28,4 @@ defmodule DbbWeb.SetupLive.Index do
 
     {:noreply, redirect(socket, to: ~p"/login")}
   end
-  
 end
