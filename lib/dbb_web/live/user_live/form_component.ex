@@ -25,6 +25,7 @@ defmodule DbbWeb.UserLive.FormComponent do
         <.input field={@form[:email]} type="text" label="Email" />
         <.input field={@form[:first_name]} type="text" label="First name" />
         <.input field={@form[:last_name]} type="text" label="Last name" />
+        <.input field={@form[:password]} type="password" label="Password" />
         <span class="!mt-8 block font-bold text-sm">
           Permissions
         </span>

@@ -4,7 +4,7 @@ defmodule DbbWeb.UserLiveTest do
   import Phoenix.LiveViewTest
 
   @create_attrs %{
-    email: "email@example.com",
+    email: "email_test@example.com",
     first_name: "some first_name",
     last_name: "some last_name",
     username: "some username"
@@ -78,6 +78,10 @@ defmodule DbbWeb.UserLiveTest do
 
       assert index_live
              |> form("#user-form", user: @create_attrs)
+             |> render_change()
+
+      assert index_live
+             |> form("#user-form")
              |> render_submit()
 
       assert_patch(index_live, ~p"/admin/users")
