@@ -1,20 +1,21 @@
 defmodule Dbb.Seed do
+
   @spec generate(integer()) :: any()
   def generate(count) do
-    Schema.get_config()
+    Dbb.Schema.get_config()
     |> Map.get("schemas")
-    |> Enum.map(fn %{"name" => schema_name, "fields" => fields} ->
+    |> Enum.each(fn %{"name" => schema_name, "fields" => fields} ->
       fields = Map.to_list(fields)
 
       records_count = :rand.uniform(count) + 1
 
-      Enum.map(0..records_count, fn _ ->
+      Enum.each(0..records_count, fn _ ->
         generated_data =
           Enum.reduce(fields, %{}, fn {k, v}, acc ->
-            Map.put(acc, k, Mix.Tasks.Dbb.Seed.Generator.generate(v))
+            Map.put(acc, k, Dbb.Seed.Generator.generate(v))
           end)
 
-        Content.create_table_record(schema_name, generated_data)
+        Dbb.Content.create_table_record(schema_name, generated_data)
       end)
     end)
   end

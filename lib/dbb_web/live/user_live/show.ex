@@ -4,7 +4,16 @@ defmodule DbbWeb.UserLive.Show do
   alias Dbb.Accounts
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, _session, %{assigns: %{structured_permissions: structured_permissions}} = socket) do
+    socket =
+      if TrollBridge.allowed?(structured_permissions, "admin", "all") do
+        socket
+      else
+        socket
+        |> put_flash(:error, "Access Denied")
+        |> redirect(to: ~p"/admin")
+      end
+
     {:ok, socket}
   end
 

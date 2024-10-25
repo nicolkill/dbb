@@ -5,8 +5,17 @@ defmodule DbbWeb.UserLive.Index do
   alias Dbb.Accounts.User
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, stream(socket, :users, Accounts.list_users())}
+  def mount(_params, _session, %{assigns: %{structured_permissions: structured_permissions}} = socket) do
+    socket =
+      if TrollBridge.allowed?(structured_permissions, "admin", "all") do
+        stream(socket, :users, Accounts.list_users())
+      else
+        socket
+        |> put_flash(:error, "Access Denied")
+        |> redirect(to: ~p"/admin")
+      end
+
+    {:ok, socket}
   end
 
   @impl true

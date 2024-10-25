@@ -6,14 +6,17 @@
         text: "SwaggerUI",
         url: "/api_docs/v1",
         class: "bg-green-400 hover:bg-green-600"
-      },
-      %{
-        text: "Admin Users",
-        url: "/admin/users",
-        class: "bg-yellow-400 hover:bg-yellow-600 text-black"
       }
-    ] ++
-      Dbb.Utils.schemas_menu_list(@structured_permissions) ++
+    ]
+    ++ if TrollBridge.allowed?(@structured_permissions, "admin", "all"),
+         do: [%{
+           text: "Admin Users",
+           url: "/admin/users",
+           class: "bg-yellow-400 hover:bg-yellow-600 text-black"
+         }],
+         else: []
+    ++ Dbb.Utils.schemas_menu_list(@structured_permissions)
+    ++
       [
         %{
           text: "Logout",

@@ -110,6 +110,7 @@ defmodule Dbb.Content do
     end
     |> limit(^count)
     |> offset(^offset)
+#    |> order_by(asc: :updated_at)
     |> Repo.all()
     |> Enum.map(&add_relations(&1, relations))
   end

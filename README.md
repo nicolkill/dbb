@@ -227,6 +227,14 @@ pass
 
 And then you can go to the admin users and create the other ones with specific permissions
 
+## Seeds
+
+To the database with randomized data you can open the iex console with `make iex` and run the next command
+
+```elixir
+Dbb.Seed.generate(1000) # any number of that you want
+```
+
 ## How to run:
 
 ### Using docker image
