@@ -31,8 +31,8 @@ defmodule Dbb.Release do
 
     migrations
     |> Enum.filter(fn
-      {:down, _, _} -> false
-      {:up, _, _} -> true
+      {:down, _, _} -> true
+      {:up, _, _} -> false
     end)
     |> case do
       [] ->
