@@ -35,7 +35,7 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
   end
 
   @impl true
-  def handle_event("first_page", _, %{assigns: %{page: page}} = socket) do
+  def handle_event("first_page", _, %{assigns: %{page: _page}} = socket) do
     {:noreply, load_data(socket, 0)}
   end
 
@@ -71,8 +71,8 @@ defmodule DbbWeb.AdminTable.AdminTableLive do
 
     true =
       TableApi.delete(%{
-        id: table_record.id,
-        schema: table_record.schema
+        "id" => table_record.id,
+        "schema" => table_record.schema
       })
 
     socket =

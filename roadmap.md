@@ -50,9 +50,10 @@
     - [ ] Show all schemas and details
     - [x] List of available schemas
     - [x] List the data from schema
-      - [ ] Custom screen with presetted filters
+      - [ ] Custom screen with pre-defined filters
       - [ ] Fields sort order
       - [ ] Link to related field
+      - [ ] Custom action per row
       - [ ] Scroll to load
     - [x] Create new record
       - [x] Call hook on action

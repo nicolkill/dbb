@@ -51,9 +51,9 @@ defmodule Dbb.MixProject do
       {:cors_plug, "~> 3.0"},
       {:tesla, "~> 1.14"},
       {:hackney, "~> 1.23"},
-      {:map_schema_validator, "~> 0.2"},
+      {:map_schema_validator, "~> 0.1.8"},
       {:phoenix_swagger, "~> 0.8"},
-      {:ex_json_schema, "~> 0.10"},
+      {:ex_json_schema, "~> 0.7.1"},
       {:guardian, "~> 2.4"},
       {:bcrypt_elixir, "~> 3.2"},
       {:troll_bridge, "~> 0.1.0"}
