@@ -1,5 +1,4 @@
 defmodule Dbb.Seed do
-
   @spec generate(integer()) :: any()
   def generate(count) do
     Dbb.Schema.get_config()

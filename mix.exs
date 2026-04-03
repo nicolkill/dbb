@@ -42,7 +42,7 @@ defmodule Dbb.MixProject do
       {:phoenix_live_view, "~> 1.1"},
       {:floki, "~> 0.37", only: :test},
       {:esbuild, "~> 0.9", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.4.1", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.1"},
       {:telemetry_poller, "~> 1.2"},
       {:jason, "~> 1.4"},

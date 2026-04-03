@@ -10,7 +10,7 @@ defmodule DbbWeb.UserLive.FormComponent do
     ~H"""
     <div>
       <.header>
-        <%= @title %>
+        {@title}
         <:subtitle>Use this form to manage user records in your database.</:subtitle>
       </.header>
 
@@ -37,7 +37,7 @@ defmodule DbbWeb.UserLive.FormComponent do
         />
         <div :for={{role, permissions} <- Map.to_list(@schema_roles)} class="flex flex-wrap gap-4">
           <span class="basis-1/4 font-bold">
-            <%= Utils.capitalize_snake_case(role) %>
+            {Utils.capitalize_snake_case(role)}
           </span>
           <.input
             :for={permission <- permissions}

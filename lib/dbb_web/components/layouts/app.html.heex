@@ -7,28 +7,30 @@
         url: "/api_docs/v1",
         class: "bg-green-400 hover:bg-green-600"
       }
-    ]
-    ++ if TrollBridge.allowed?(@structured_permissions, "admin", "all"),
-         do: [%{
-           text: "Admin Users",
-           url: "/admin/users",
-           class: "bg-yellow-400 hover:bg-yellow-600 text-black"
-         }],
-         else: []
-    ++ Dbb.Utils.schemas_menu_list(@structured_permissions)
-    ++
-      [
-        %{
-          text: "Logout",
-          url: "/admin/logout",
-          class: "bg-red-400 hover:bg-red-600 text-black"
-        }
-      ]
+    ] ++
+      if TrollBridge.allowed?(@structured_permissions, "admin", "all"),
+        do: [
+          %{
+            text: "Admin Users",
+            url: "/admin/users",
+            class: "bg-yellow-400 hover:bg-yellow-600 text-black"
+          }
+        ],
+        else:
+          [] ++
+            Dbb.Utils.schemas_menu_list(@structured_permissions) ++
+            [
+              %{
+                text: "Logout",
+                url: "/admin/logout",
+                class: "bg-red-400 hover:bg-red-600 text-black"
+              }
+            ]
   }
 />
 <main class="px-4 py-20 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-4xl">
     <.flash_group flash={@flash} />
-    <%= @inner_content %>
+    {@inner_content}
   </div>
 </main>

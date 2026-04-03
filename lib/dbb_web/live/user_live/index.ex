@@ -5,7 +5,11 @@ defmodule DbbWeb.UserLive.Index do
   alias Dbb.Accounts.User
 
   @impl true
-  def mount(_params, _session, %{assigns: %{structured_permissions: structured_permissions}} = socket) do
+  def mount(
+        _params,
+        _session,
+        %{assigns: %{structured_permissions: structured_permissions}} = socket
+      ) do
     socket =
       if TrollBridge.allowed?(structured_permissions, "admin", "all") do
         stream(socket, :users, Accounts.list_users())
