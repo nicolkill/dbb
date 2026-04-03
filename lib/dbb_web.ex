@@ -82,6 +82,10 @@ defmodule DbbWeb do
     quote do
       # HTML escaping functionality
       import Phoenix.HTML
+      import Phoenix.HTML.Helpers
+      import PhoenixHTMLHelpers.Form
+      import PhoenixHTMLHelpers.Tag
+      import PhoenixHTMLHelpers.Link
       # Core UI components and translation
       import DbbWeb.CoreComponents
 
