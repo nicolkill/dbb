@@ -56,7 +56,8 @@ defmodule Dbb.MixProject do
       {:ex_json_schema, "~> 0.7.1"},
       {:guardian, "~> 2.4"},
       {:bcrypt_elixir, "~> 3.2"},
-      {:troll_bridge, "~> 0.1.0"}
+      {:troll_bridge, "~> 0.1.0"},
+      {:lazy_html, ">= 0.1.0", only: :test}
     ]
   end
 
