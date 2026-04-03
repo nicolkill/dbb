@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.14.4-erlang-25.3-alpine-3.17.2
+FROM hexpm/elixir:1.19.5-erlang-28.0.1-alpine-3.23.3
 
 RUN apk update \
     && apk add --no-cache \

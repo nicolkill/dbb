@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.14.4-erlang-25.3-alpine-3.17.2 AS build
+FROM hexpm/elixir:1.19.5-erlang-28.0.1-alpine-3.23.3 AS build
 
 # install build dependencies
 RUN apk add --no-cache build-base \
@@ -33,7 +33,7 @@ COPY assets assets
 # COPY rel rel
 RUN mix do compile, assets.build, assets.deploy, release
 
-FROM alpine:3.17.0 AS app
+FROM alpine:3.23.3 AS app
 RUN apk add --no-cache \
     openssl \
     ncurses-libs \

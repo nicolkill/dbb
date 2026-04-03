@@ -1,7 +1,7 @@
 IMAGE_TAG := nicolkill/dbb
 IMAGE_TAG_DEV := nicolkill/dbb_dev
 REVISION := $(shell git rev-parse --short HEAD)
-RUN_STANDARD := docker run --rm -v `pwd`:/app -w /app hexpm/elixir:1.14.4-erlang-25.3-alpine-3.17.2
+RUN_STANDARD := docker run --rm -v `pwd`:/app -w /app hexpm/elixir:1.19.5-erlang-28.0.1-alpine-3.23.3
 
 all: build image
 
