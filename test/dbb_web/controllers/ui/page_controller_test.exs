@@ -16,12 +16,12 @@ defmodule DbbWeb.Page.PageControllerTest do
     end
 
     test "show users data", %{conn: conn} do
-      %{users: [user | _rest]} = create_users(nil)
+      %{users: [user1, user2, user3]} = create_users(nil)
       {:ok, view, _html} = live(conn, ~p"/admin/user_accounts")
 
-      view = element(view, "table.table-auto.w-full tbody tr:first-child()")
-
-      assert render(view) =~ user.data["name"]
+      assert render(view) =~ user1.data["name"]
+      assert render(view) =~ user2.data["name"]
+      assert render(view) =~ user3.data["name"]
     end
 
     #    test "handles delete on UI", %{conn: conn} do

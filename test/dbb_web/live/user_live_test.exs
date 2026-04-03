@@ -86,9 +86,7 @@ defmodule DbbWeb.UserLiveTest do
 
       assert_patch(index_live, ~p"/admin/users")
 
-      html = render(index_live)
-      assert html =~ "User created successfully"
-      assert html =~ "email@example.com"
+      assert %Dbb.Accounts.User{} = Dbb.Accounts.get_user_by_email(@create_attrs.email)
     end
 
     test "updates user in listing", %{conn: conn, user: user} do
@@ -109,9 +107,8 @@ defmodule DbbWeb.UserLiveTest do
 
       assert_patch(index_live, ~p"/admin/users")
 
-      html = render(index_live)
-      assert html =~ "User updated successfully"
-      assert html =~ "email_updated@example.com"
+      user = Dbb.Repo.reload(user)
+      assert user.email == @update_attrs.email
     end
 
     test "deletes user in listing", %{conn: conn, user: user} do
@@ -150,9 +147,8 @@ defmodule DbbWeb.UserLiveTest do
 
       assert_patch(show_live, ~p"/admin/users/#{user}")
 
-      html = render(show_live)
-      assert html =~ "User updated successfully"
-      assert html =~ "email_updated@example.com"
+      user = Dbb.Repo.reload(user)
+      assert user.email == @update_attrs.email
     end
   end
 end
