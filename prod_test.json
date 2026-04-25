@@ -56,6 +56,16 @@
       "generate": {
         "sku": "$str(4)$-$num(4)$-$sym(4)$-$any(4)$"
       }
+    },
+    {
+      "name": "profiles",
+      "fields": {
+        "name": "string",
+        "bio": "string",
+        "settings": "map",
+        "metadata": "map",
+        "tags": ["string"]
+      }
     }
   ]
 }

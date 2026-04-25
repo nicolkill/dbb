@@ -13,12 +13,12 @@
       - [x] Instructions to start the default admin user
 - [x] Swagger
 - [x] CRUD
-- [ ] Valid types on Schema
+- [x] Valid types on Schema
     - [x] String
     - [x] Number
     - [x] Boolean
     - [x] Datetime
-    - [ ] Maps
+    - [x] Maps
     - [x] List
     - [x] UUID
 - [ ] Schema events (create, update, delete)

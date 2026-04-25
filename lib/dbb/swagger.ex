@@ -3,6 +3,7 @@ defmodule Dbb.Swagger do
   defp schema_response_title(cap_name), do: "#{cap_name}Response"
   defp schemas_response_title(cap_name), do: "#{cap_name}ResponseMulti"
 
+  defp value_example("map"), do: %{"some" => "data"}
   defp value_example("number"), do: 10
   defp value_example("float"), do: 10.0
   defp value_example("integer"), do: 10
@@ -24,6 +25,7 @@ defmodule Dbb.Swagger do
   defp swg_properties("datetime"), do: %{"type" => "string", "format" => "date-time"}
   defp swg_properties("integer"), do: %{"type" => "integer"}
   defp swg_properties("boolean"), do: %{"type" => "boolean"}
+  defp swg_properties("map"), do: %{"type" => "object"}
   defp swg_properties(data) when is_list(data), do: %{"type" => "array"}
 
   defp cap_name(schema), do: Dbb.Utils.modularize_snake_case(schema["name"])

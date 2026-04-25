@@ -275,6 +275,227 @@ defmodule DbbWeb.TableControllerTest do
     end
   end
 
+  describe "profiles with map fields" do
+    @valid_profile_attrs %{
+      "name" => "John Doe",
+      "bio" => "Software developer",
+      "settings" => %{
+        "theme" => "dark",
+        "notifications" => true,
+        "language" => "en"
+      },
+      "metadata" => %{
+        "created_by" => "admin",
+        "version" => 1,
+        "tags" => ["vip", "early-adopter"]
+      },
+      "tags" => ["developer", "admin"]
+    }
+
+    @profile_update_attrs %{
+      "settings" => %{
+        "theme" => "light",
+        "notifications" => false
+      }
+    }
+
+    test "creates profile with valid map fields", %{conn: conn} do
+      conn = post(conn, ~p"/api/v1/profiles", data: @valid_profile_attrs)
+
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      conn = get(conn, ~p"/api/v1/profiles/#{id}")
+
+      assert %{
+               "id" => ^id,
+               "data" => %{
+                 "name" => "John Doe",
+                 "bio" => "Software developer",
+                 "settings" => %{
+                   "theme" => "dark",
+                   "notifications" => true,
+                   "language" => "en"
+                 },
+                 "metadata" => %{
+                   "created_by" => "admin",
+                   "version" => 1,
+                   "tags" => ["vip", "early-adopter"]
+                 },
+                 "tags" => ["developer", "admin"]
+               },
+               "schema" => "profiles"
+             } = json_response(conn, 200)["data"]
+    end
+
+    test "creates profile with empty map", %{conn: conn} do
+      attrs = %{
+        "name" => "Empty Maps User",
+        "settings" => %{},
+        "metadata" => %{}
+      }
+
+      conn = post(conn, ~p"/api/v1/profiles", data: attrs)
+
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      conn = get(conn, ~p"/api/v1/profiles/#{id}")
+
+      assert %{
+               "data" => %{
+                 "settings" => %{},
+                 "metadata" => %{}
+               }
+             } = json_response(conn, 200)["data"]
+    end
+
+    test "creates profile with deeply nested map", %{conn: conn} do
+      attrs = %{
+        "name" => "Nested User",
+        "settings" => %{
+          "theme" => "dark",
+          "advanced" => %{
+            "cache" => %{
+              "enabled" => true,
+              "ttl" => 3600
+            },
+            "features" => ["beta", "experimental"]
+          }
+        }
+      }
+
+      conn = post(conn, ~p"/api/v1/profiles", data: attrs)
+
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      conn = get(conn, ~p"/api/v1/profiles/#{id}")
+
+      assert %{
+               "data" => %{
+                 "settings" => %{
+                   "theme" => "dark",
+                   "advanced" => %{
+                     "cache" => %{
+                       "enabled" => true,
+                       "ttl" => 3600
+                     },
+                     "features" => ["beta", "experimental"]
+                   }
+                 }
+               }
+             } = json_response(conn, 200)["data"]
+    end
+
+    test "renders error when settings is not a map", %{conn: conn} do
+      conn =
+        post(conn, ~p"/api/v1/profiles",
+          data: %{
+            "name" => "Invalid User",
+            "settings" => "not a map",
+            "metadata" => ["not", "a", "map"]
+          }
+        )
+
+      assert %{"message" => "not valid body"} = json_response(conn, 422)
+    end
+
+    test "renders error when metadata is array instead of map", %{conn: conn} do
+      attrs = %{
+        "name" => "Bad Metadata",
+        "metadata" => ["item1", "item2"]
+      }
+
+      conn = post(conn, ~p"/api/v1/profiles", data: attrs)
+
+      assert %{"message" => "not valid body"} = json_response(conn, 422)
+    end
+
+    test "renders error when map field is null", %{conn: conn} do
+      attrs = %{
+        "name" => "Null Map User",
+        "settings" => nil
+      }
+
+      conn = post(conn, ~p"/api/v1/profiles", data: attrs)
+
+      assert %{"message" => "not valid body"} = json_response(conn, 422)
+    end
+
+    test "renders error when map field is number", %{conn: conn} do
+      attrs = %{
+        "name" => "Number Map User",
+        "settings" => 12345
+      }
+
+      conn = post(conn, ~p"/api/v1/profiles", data: attrs)
+
+      assert %{"message" => "not valid body"} = json_response(conn, 422)
+    end
+
+    test "renders error when map field is boolean", %{conn: conn} do
+      attrs = %{
+        "name" => "Boolean Map User",
+        "metadata" => true
+      }
+
+      conn = post(conn, ~p"/api/v1/profiles", data: attrs)
+
+      assert %{"message" => "not valid body"} = json_response(conn, 422)
+    end
+
+    test "updates profile map field", %{conn: conn} do
+      conn = post(conn, ~p"/api/v1/profiles", data: @valid_profile_attrs)
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      conn = put(conn, ~p"/api/v1/profiles/#{id}", data: @profile_update_attrs)
+
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+
+      conn = get(conn, ~p"/api/v1/profiles/#{id}")
+
+      assert %{
+               "data" => %{
+                 "settings" => %{
+                   "theme" => "light",
+                   "notifications" => false
+                 }
+               }
+             } = json_response(conn, 200)["data"]
+    end
+
+    test "lists all profiles", %{conn: conn} do
+      conn = post(conn, ~p"/api/v1/profiles", data: @valid_profile_attrs)
+      assert %{"id" => _id} = json_response(conn, 201)["data"]
+
+      conn = get(conn, ~p"/api/v1/profiles")
+
+      assert [
+               %{
+                 "data" => %{
+                   "name" => "John Doe",
+                   "settings" => %{
+                     "theme" => "dark"
+                   }
+                 },
+                 "schema" => "profiles"
+               }
+             ] = json_response(conn, 200)["data"]
+    end
+
+    test "filters profiles by nested map content", %{conn: conn} do
+      conn = post(conn, ~p"/api/v1/profiles", data: @valid_profile_attrs)
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      conn = get(conn, ~p"/api/v1/profiles?q=name:John")
+
+      assert [
+               %{
+                 "data" => %{"name" => "John Doe"},
+                 "id" => ^id
+               }
+             ] = json_response(conn, 200)["data"]
+    end
+  end
+
   describe "delete element" do
     setup [:create_users]
 

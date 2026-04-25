@@ -6,6 +6,7 @@ defmodule Dbb.TableHandler do
   alias Dbb.Content
   alias Dbb.Content.Table
   alias Dbb.Schema
+  alias Dbb.SchemaManager.ValueValidator
 
   def get_config_schema(schema_name),
     do:
@@ -79,6 +80,7 @@ defmodule Dbb.TableHandler do
   end
 
   def type_transform(types) when is_list(types), do: Enum.map(types, &type_transform/1)
+  def type_transform("map"), do: :map
   def type_transform(type), do: String.to_atom(type)
 
   defp validates_data_with_schema(data, schema_fields) when is_map(data) do
@@ -93,7 +95,7 @@ defmodule Dbb.TableHandler do
         end
       )
 
-    {:ok, nil} == MapSchemaValidator.validate(schema_fields, data)
+    {:ok, nil} == ValueValidator.validate(schema_fields, data)
   end
 
   defp validates_data_with_schema(_, _), do: false

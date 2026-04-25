@@ -64,4 +64,21 @@ defmodule Dbb.ContentFixtures do
 
     table
   end
+
+  @doc """
+  Generate a table element with schema of profiles (with map fields).
+  """
+  def profiles_fixture(attrs \\ %{}) do
+    attrs =
+      Enum.into(attrs, %{
+        "name" => "profile user",
+        "bio" => "test bio",
+        "settings" => %{"theme" => "dark", "notifications" => true},
+        "metadata" => %{"version" => 1}
+      })
+
+    {:ok, table} = Dbb.Content.create_table_record("profiles", attrs)
+
+    table
+  end
 end
