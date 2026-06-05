@@ -8,6 +8,9 @@ all: build image
 up:
 	docker compose up
 
+up-headless:
+	docker compose up -d
+
 build:
 	$(RUN_STANDARD) sh -c 'apk update && apk add --no-cache git build-base linux-headers \
 								&& echo "#include <unistd.h>" > /usr/include/sys/unistd.h \
@@ -22,6 +25,12 @@ image:
 
 testing:
 	docker compose exec app sh -c 'MIX_ENV=test mix test --timeout 3000'
+
+testing:
+	docker compose exec app sh -c 'MIX_ENV=test mix test --timeout 3000'
+
+test_single_file:
+	docker compose exec app sh -c 'MIX_ENV=test mix test $(FILE) --timeout 3000'
 
 iex:
 	docker compose exec app iex -S mix
